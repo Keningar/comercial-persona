@@ -1,0 +1,38 @@
+version: '3.3' 
+
+services:
+  NAME_SERVICE:
+    image: IMAGE
+    container_name: NOMBRE_CONTENEDOR
+    hostname: NOMBRE_CONTENEDOR
+    domainname: telconet.ec
+    restart: always 
+    ports:
+      - 'PUERTO:PUERTO'
+    environment:
+      - ipkfa=IPSKAFKA
+    volumes:
+      - DIR_AMBIENTE/application.properties:/application.properties
+      - DIR_AMBIENTE/log4j2.xml:/log4j2.xml
+      - PARAM1:/parameters.yml
+    networks:
+      - microservicio_swarm
+    extra_hosts:
+      - "kafka-N:IPKAFKA"
+    deploy:
+      replicas: $numero_replicas_swarm
+      labels:
+        - traefik.enable=true
+        - "traefik.http.middlewares.MIDDLEWARE-URL.forwardauth.address=FORWARDAUTH-URL"
+        - traefik.http.services.NAME_SERVICE.loadbalancer.server.port=PUERTO
+        - traefik.http.routers.NAME_SERVICE.rule=Host(`ENVIRONMENTURL`) && PathPrefix(`/PATHPREF`)
+        - traefik.http.routers.NAME_SERVICE.rule=Host(`ENVIRONMENTURL`)
+        - traefik.http.routers.NAME_SERVICE.middlewares=MIDDLEWARE-URL
+        - traefik.http.routers.NAME_SERVICE.service=NAME_SERVICE
+        - traefik.docker.network=microservicio_swarm
+        - traefik.http.routers.NAME_SERVICE.entrypoints=web
+
+networks:
+    microservicio_swarm:
+      external:
+            name: microservicio_swarm 

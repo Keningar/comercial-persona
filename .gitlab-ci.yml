@@ -1,0 +1,32 @@
+image: docker:stable                                          
+
+variables:
+  DOCKER_DRIVER: overlay2
+  GIT_SSL_NO_VERIFY: "true"
+  CI_REGISTRY_USER: "sonar-runner"
+  CI_RUTA_FILE: ""
+  CI_VERSION: ""
+  archivo_jar: ""
+  IP: ""
+  ruta_proyecto: ""
+  numero_replicas_swarm: ""
+  nombre_servicio_swarm: ""
+
+stages:
+  - SONAR
+  - DEV
+  - QA
+  - PROD
+
+include:
+  - template: sonar-scanner.gitlab-ci.yml
+  - template: microservice-build-microdev.gitlab-ci.yml
+  - template: microservice-build-microqams.gitlab-ci.yml
+  - template: docker-imagemicroqa-registry.gitlab-ci.yml
+  - template: microservice-deploymicroqa-swarm-bld3.gitlab-ci.yml
+  - template: microservice-deploymicroqa-swarm-bld6.gitlab-ci.yml
+  - template: microservice-build-microprd.gitlab-ci.yml
+  - template: docker-imagemicroprd-registry.gitlab-ci.yml
+  - template: microservice-deploymicro-swarms-prd.gitlab-ci.yml
+  - template: merge-prod.gitlab-ci.yml
+

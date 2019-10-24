@@ -1,0 +1,15 @@
+package ec.telconet.persona;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+@ComponentScan(basePackages = "ec.telconet")
+public class PersonaApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(PersonaApplication.class, args);
+	}
+
+}

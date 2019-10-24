@@ -1,0 +1,8 @@
+server.port=${port:1604}
+spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+spring.kafka.bootstrap-servers=kafka:9092
+spring.kafka.consumer.auto-offset-reset=earliest
+spring.kafka.consumer.group-id=persona
+kafka.topic.persona.request=personaRequest
+kafka.topic.persona.reply=personaReply
+kafka.request-reply.timeout-ms=1000

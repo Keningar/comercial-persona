@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  persona:
+    image: 'registry.gitlab.telconet.ec/docker/images/$NOMBRE_IMAGEN:$CI_VERSION'
+    container_name: ms-tn-general-persona
+    hostname: 'ms-tn-general-persona'
+    domainname: telconet.ec
+    restart: always 
+    ports:
+      - '1604:1604'
+    volumes:
+      - $ruta_proyecto/application.properties:/application.properties
+      - $ruta_proyecto/log4j2.xml:/log4j2.xml
+    extra_hosts:
+      - "kafka.telconet.ec:172.12.0.3"
+    networks:
+      - kafka_subnet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.persona-router.rule=Host(`ms-tn-general-persona.telconet.ec`)"
+      - "traefik.http.routers.persona-router.entrypoints=web"
+      
+networks:
+    kafka_subnet:
+      external:
+            name: kafka_subnet
+
+
+
