@@ -14,8 +14,8 @@
 
 		<!-- Rolling File Appender -->
 		<RollingFile name="FileAppender"
-			fileName="/var/log/api-persona/Persona.log"
-			filePattern="/var/log/api-persona/Persona-%d{yyyy-MM}-%i.log">
+			fileName="../logs/Persona.log"
+			filePattern="../logs/Persona-%d{yyyy-MM}-%i.log">
 
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>

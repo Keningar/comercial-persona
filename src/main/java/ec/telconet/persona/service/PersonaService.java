@@ -1,23 +1,140 @@
-/*
- * @(#)ReportService.java 1.0 20/04/2019
- * 
- * Copyright 2019 Telconet S.A. All rights reserved.
- */
-
 package ec.telconet.persona.service;
 
-import ec.telconet.mensaje.request.PersonaRequest;
-import ec.telconet.mensaje.response.PersonaResponse;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ec.telconet.microservicio.dependencia.util.dto.PageDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorDepartamentoReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
+import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaService;
 
 /**
- * Interfaz que define los procedimientos necesarios usados para generción y configuración del reporte
+ * Clase utilizada donde se encuentran los servicios de las personas
  *
- * @author Jose Vinueza Herrera <mailto:jdvinueza@telconet.ec>
+ * @author Marlon Plúas <mailto:mpluas@telconet.ec>
  * @version 1.0
- * @since 20/04/2019
+ * @since 02/03/2020
  */
-
-public interface PersonaService {
-	PersonaResponse consultarPersonaPorEstado(PersonaRequest reporteInfo);
+@Service
+public class PersonaService {
+	@Autowired
+	InfoPersonaService infoPersonaService;
+	
+	/**
+	 * Método que retorna la lista de personas
+	 * 
+	 * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+	 * @version 1.0
+	 * @since 02/03/2020
+	 * 
+	 * @return List<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<InfoPersona> listaPersona() throws Exception {
+		return infoPersonaService.lista();
+	}
+	
+	/**
+	 * Método que retorna la lista de personas con filtros
+	 * 
+	 * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+	 * @version 1.0
+	 * @since 02/03/2020
+	 * 
+	 * @param request InfoPersona
+	 * @return List<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<InfoPersona> listaPersonaPor(InfoPersona request) throws Exception {
+		return infoPersonaService.listaPor(request);
+	}
+	
+	/**
+	 * Método que retorna la paginación de una lista de personas con filtros
+	 * 
+	 * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+	 * @version 1.0
+	 * @since 02/03/2020
+	 * 
+	 * @param request PageDTO<InfoPersona>
+	 * @return Page<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public Page<InfoPersona> paginaListaPersonaPor(PageDTO<InfoPersona> request) throws Exception {
+		return infoPersonaService.paginaListaPor(request);
+	}
+	
+	/**
+	 * Método que retorna la lista de personas por region
+	 * 
+	 * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+	 * @version 1.0
+	 * @since 02/03/2020
+	 * 
+	 * @param request PersonaPorRegionReqDTO
+	 * @return List<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<InfoPersona> listaPersonaPorRegion(PersonaPorRegionReqDTO request) throws Exception {
+		return infoPersonaService.personaPorRegion(request);
+	}
+	
+	/**
+	 * Método que retorna la lista de personas por rol
+	 * 
+	 * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+	 * @version 1.0
+	 * @since 02/03/2020
+	 * 
+	 * @param request PersonaPorRolReqDTO
+	 * @return List<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<InfoPersona> listaPersonaPorRol(PersonaPorRolReqDTO request) throws Exception {
+		return infoPersonaService.personaPorRol(request);
+	}
+	
+	/**
+	 * Método que retorna la lista de personas por departamento
+	 * 
+	 * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+	 * @version 1.0
+	 * @since 02/03/2020
+	 * 
+	 * @param request PersonaPorDepartamentoReqDTO
+	 * @return List<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<InfoPersona> listaPersonaPorDepartamento(PersonaPorDepartamentoReqDTO request) throws Exception {
+		return infoPersonaService.personaPorDepartamento(request);
+	}
+	
+	/**
+	 * Método que retorna la lista de personas por empresa (Cod o Prefijo)
+	 * 
+	 * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+	 * @version 1.0
+	 * @since 02/03/2020
+	 * 
+	 * @param request PersonaPorEmpresaReqDTO
+	 * @return List<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<InfoPersona> listaPersonaPorEmpresa(PersonaPorEmpresaReqDTO request) throws Exception {
+		return infoPersonaService.personaPorEmpresa(request);
+	}
 }
