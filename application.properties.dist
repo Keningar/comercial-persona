@@ -4,16 +4,16 @@ spring.kafka.bootstrap-servers=kafka-1:19092,kafka-2:29092,kafka-3:39092
 kafka.request-reply.timeout-ms=300s
 
 # Log en consola para ver los pool de conexiones 
-logging.level.com.zaxxer.hikari=DEBUG
-spring.jpa.properties.hibernate.generate_statistics=true
+#logging.level.com.zaxxer.hikari=DEBUG
+#spring.jpa.properties.hibernate.generate_statistics=true
 
 #Parametros de base oracle
 ruta.parameterslocal=/home/mpluas/Repositorios/telcos/app/config/parameters.yml
 host.parameter=localhost
 spring.datasource.hikari.idle-timeout=300000
 spring.datasource.hikari.connection-timeout=60000
-spring.datasource.hikari.maximum-pool-size=200
-spring.datasource.hikari.minimum-idle=20
+spring.datasource.hikari.maximum-pool-size=100
+spring.datasource.hikari.minimum-idle=10
 spring.datasource.hikari.max-lifetime=600000
 
 #Log - "classpath:log4j2.xml" => Ambiente de desa, "file:/var/log4j2.xml" => Ambiente de prod

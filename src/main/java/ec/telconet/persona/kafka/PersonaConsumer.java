@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ec.telconet.microservicio.core.comercial.kafka.cons.CoreComercialConstants;
 import ec.telconet.microservicio.core.comercial.kafka.request.HistorialServicioKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.InfoUsuarioKafkaReq;
+import ec.telconet.microservicio.core.comercial.kafka.request.PersonaEmpresaRolKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaKafkaReq;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
 import ec.telconet.microservicio.dependencia.util.general.Formato;
@@ -26,8 +27,10 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorE
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
+import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoServicioHistorial;
 import ec.telconet.persona.service.ConsultasService;
+import ec.telconet.persona.service.PersonaEmpresaRolService;
 import ec.telconet.persona.service.PersonaService;
 import ec.telconet.persona.service.ServicioHistorialService;
 
@@ -50,6 +53,9 @@ public class PersonaConsumer {
 	
 	@Autowired
 	ConsultasService consultasService;
+	
+	@Autowired
+	PersonaEmpresaRolService personaEmpresaRolService;
 	
 	/**
 	 * Listener asincrónico kafka
@@ -160,6 +166,22 @@ public class PersonaConsumer {
 				// Fin Proceso logico
 				KafkaResponse<InfoUsuarioResDTO> response = new KafkaResponse<InfoUsuarioResDTO>();
 				response.setData(consultasService.infoUsuario(requestService));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
+				return (KafkaResponse<T>) response;
+			} else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_EMPRESA_ROL)) {
+				KafkaResponse<InfoPersonaEmpresaRol> response = new KafkaResponse<InfoPersonaEmpresaRol>();
+				response.setData(personaEmpresaRolService.listaPersonaEmpresaRol());
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
+				return (KafkaResponse<T>) response;
+			} else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_EMPRESA_ROL_POR)) {
+				PersonaEmpresaRolKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaEmpresaRolKafkaReq.class);
+				// Inicio Proceso logico
+				InfoPersonaEmpresaRol requestService = Formato.mapearObjDeserializado(data, InfoPersonaEmpresaRol.class);
+				// Fin Proceso logico
+				KafkaResponse<InfoPersonaEmpresaRol> response = new KafkaResponse<InfoPersonaEmpresaRol>();
+				response.setData(personaEmpresaRolService.listaPersonaEmpresaRolPor(requestService));
 				commitKafka.acknowledge();
 				log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
 				return (KafkaResponse<T>) response;

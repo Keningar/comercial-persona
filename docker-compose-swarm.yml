@@ -23,11 +23,20 @@ services:
       replicas: $numero_replicas_swarm
       labels:
         - traefik.enable=true
-        - "traefik.http.middlewares.MIDDLEWARE-URL.forwardauth.address=FORWARDAUTH-URL"
+        - traefik.http.middlewares.MIDDLEWARE-URL.forwardauth.address=FORWARDAUTH-URL
+        - traefik.http.middlewares.MIDDLEWARE-URL.forwardauth.trustForwardHeader=true
+        - traefik.http.middlewares.MIDDLEWARE-URL.forwardauth.authResponseHeaders=tokenCas
+        - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.accesscontrolalloworiginlist=*
+        - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.accesscontrolallowmethods=*
+        - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.accesscontrolmaxage=86400
+        - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.addvaryheader=true
+        - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.accessControlAllowCredentials=true
+        - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.accessControlAllowHeaders=*
+        - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.accessControlExposeHeaders=*
         - traefik.http.services.NAME_SERVICE.loadbalancer.server.port=PUERTO
         - traefik.http.routers.NAME_SERVICE.rule=Host(`ENVIRONMENTURL`) && PathPrefix(`/PATHPREF`)
         - traefik.http.routers.NAME_SERVICE.rule=Host(`ENVIRONMENTURL`)
-        - traefik.http.routers.NAME_SERVICE.middlewares=MIDDLEWARE-URL
+        - traefik.http.routers.NAME_SERVICE.middlewares=MIDDLEWARE-URLHeaders, MIDDLEWARE-URL
         - traefik.http.routers.NAME_SERVICE.service=NAME_SERVICE
         - traefik.docker.network=microservicio_swarm
         - traefik.http.routers.NAME_SERVICE.entrypoints=web
@@ -35,4 +44,5 @@ services:
 networks:
     microservicio_swarm:
       external:
-            name: microservicio_swarm 
+            name: microservicio_swarm
+            
