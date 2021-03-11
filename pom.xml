@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>ec.telconet</groupId>
 	<artifactId>ms-core-com-persona</artifactId>
-	<version>1.0.1-RELEASE</version>
+	<version>1.0.2-RELEASE</version>
 	<name>ms-core-com-persona</name>
 	<description>MS Personas</description>
 
@@ -63,17 +63,17 @@
 		<dependency>
 			<groupId>ec.telconet.microservicios.dependencias</groupId>
 			<artifactId>db-repositorio-comercial</artifactId>
-			<version>dev-mpluas-2</version>
+			<version>dev-mpluas-bug-1</version>
 		</dependency>
 		<dependency>
 			<groupId>ec.telconet.microservicios.dependencias</groupId>
 			<artifactId>ms-core</artifactId>
-			<version>1.0.4-RELEASE</version>
+			<version>1.0.7-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>ec.telconet.microservicios.dependencias</groupId>
 			<artifactId>ms-core-comercial</artifactId>
-			<version>dev-mpluas-2</version>
+			<version>dev-mpluas-bug-1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
