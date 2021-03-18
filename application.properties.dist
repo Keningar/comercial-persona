@@ -18,3 +18,7 @@ spring.datasource.hikari.max-lifetime=600000
 
 #Log - "classpath:log4j2.xml" => Ambiente de desa, "file:/var/log4j2.xml" => Ambiente de prod
 logging.config: classpath:log4j2.xml
+
+jaeger.tracer.host=
+jaeger.tracer.port=6831
+

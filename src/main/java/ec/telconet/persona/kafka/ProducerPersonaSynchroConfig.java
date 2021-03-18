@@ -21,6 +21,7 @@ import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import ec.telconet.microservicio.core.comercial.kafka.cons.CoreComercialConstants;
 import ec.telconet.microservicio.dependencia.util.kafka.KafkaRequest;
 import ec.telconet.microservicio.dependencia.util.kafka.KafkaResponse;
+import io.opentracing.contrib.kafka.TracingConsumerInterceptor;
 
 /**
  * Configuración del producer sincronico persona kafka
@@ -46,6 +47,7 @@ public class ProducerPersonaSynchroConfig {
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, CoreComercialConstants.GROUP_PERSONA.concat(uuidGrupoKafka));
 		props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+		props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, TracingConsumerInterceptor.class.getName());
 		props.put("key.serializer", "ec.telconet.microservicio.dependencia.util.kafka.utils.KafkaResponseSerializer");
 		props.put("value.serializer", "ec.telconet.microservicio.dependencia.util.kafka.utils.KafkaResponseSerializer");
 		props.put("key.deserializer", "ec.telconet.microservicio.dependencia.util.kafka.utils.KafkaResponseDeserializer");

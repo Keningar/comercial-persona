@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>ec.telconet.microservicios.dependencias</groupId>
 			<artifactId>ms-core</artifactId>
-			<version>1.0.7-RELEASE</version>
+			<version>dev-jdvinueza-1</version>
 		</dependency>
 		<dependency>
 			<groupId>ec.telconet.microservicios.dependencias</groupId>
@@ -92,6 +92,11 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-jaeger-web-starter</artifactId>
+			<version>3.2.0</version>
 		</dependency>
 	</dependencies>
 

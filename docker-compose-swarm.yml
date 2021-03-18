@@ -15,6 +15,7 @@ services:
       - DIR_AMBIENTE/application.properties:/application.properties
       - DIR_AMBIENTE/log4j2.xml:/log4j2.xml
       - PARAM1:/parameters.yml
+      - PARAM2:/logs/
     networks:
       - microservicio_swarm
     extra_hosts:
