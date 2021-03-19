@@ -21,4 +21,6 @@ logging.config: classpath:log4j2.xml
 
 jaeger.tracer.host=
 jaeger.tracer.port=6831
+jaeger.tracer.logspan=false
+jaeger.tracer.nametracer=ms-core-persona
 

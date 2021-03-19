@@ -33,6 +33,12 @@ public class PersonaApplication {
 	  @Value("${jaeger.tracer.port}")
 	  private int port;
 	  
+	  @Value("${jaeger.tracer.logspan}")
+	  private boolean logSpan;
+	  
+	  @Value("${jaeger.tracer.nametracer}")
+	  private String nametracer;
+	  
 	  
 	 /**
 	   * Bean configuracion opentrancing
@@ -48,12 +54,12 @@ public class PersonaApplication {
 	              .withParam(1);
 
 	      Configuration.ReporterConfiguration reporterConfig = Configuration.ReporterConfiguration.fromEnv()
-	              .withLogSpans(true)
+	              .withLogSpans(logSpan)
 	              .withSender(io.jaegertracing.Configuration.SenderConfiguration.fromEnv()
 	            		      .withAgentHost(host)
 	            		      .withAgentPort(port));
 
-	      Configuration config = new Configuration("ms-core-persona")
+	      Configuration config = new Configuration(nametracer)
 	              .withSampler(samplerConfig)
 	              .withReporter(reporterConfig);
 

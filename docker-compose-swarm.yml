@@ -22,6 +22,9 @@ services:
       - "kafka-N:IPKAFKA"
     deploy:
       replicas: $numero_replicas_swarm
+      resources:
+        limits:
+          memory: 3G
       labels:
         - traefik.enable=true
         - traefik.http.middlewares.MIDDLEWARE-URL.forwardauth.address=FORWARDAUTH-URL
