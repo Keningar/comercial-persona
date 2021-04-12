@@ -20,6 +20,8 @@ services:
       - microservicio_swarm
     extra_hosts:
       - "kafka-N:IPKAFKA"
+    logging:
+      driver: none
     deploy:
       replicas: $numero_replicas_swarm
       resources:
