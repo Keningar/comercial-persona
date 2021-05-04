@@ -14,7 +14,7 @@ do
   if  telnet $ip $puerto </dev/null 2>&1 | grep -q Escape 
   then
     echo "servicio kafka disponible"
-    java -jar /app.jar -Dspring.config.location=/application.properties -Dlogging.config=/log4j2.xm
+    java -XX:+PrintFlagsFinal $JAVA_OPTS -jar /app.jar -Dspring.config.location=/application.properties -Dlogging.config=/log4j2.xm
     BD_TRUE="true"
     exit
   else

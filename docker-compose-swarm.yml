@@ -11,6 +11,7 @@ services:
       - 'PUERTO:PUERTO'
     environment:
       - ipkfa=IPSKAFKA
+      - "JAVA_OPTS=-Xms1024m -Xmx1024m"
     volumes:
       - DIR_AMBIENTE/application.properties:/application.properties
       - DIR_AMBIENTE/log4j2.xml:/log4j2.xml
@@ -26,7 +27,7 @@ services:
       replicas: $numero_replicas_swarm
       resources:
         limits:
-          memory: 3G
+          memory: 2G
       labels:
         - traefik.enable=true
         - traefik.http.middlewares.MIDDLEWARE-URL.forwardauth.address=FORWARDAUTH-URL
