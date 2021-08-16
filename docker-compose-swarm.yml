@@ -6,9 +6,7 @@ services:
     container_name: NOMBRE_CONTENEDOR
     hostname: NOMBRE_CONTENEDOR
     domainname: telconet.ec
-    restart: always 
-    ports:
-      - 'PUERTO:PUERTO'
+    restart: always
     environment:
       - ipkfa=IPSKAFKA
       - "JAVA_OPTS=-Xms1024m -Xmx1024m"
