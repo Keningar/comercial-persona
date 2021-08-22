@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
 		<Property name="LOG_PATTERN">
-			%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex
+			%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%X{ipCliente}] [%15.15t] %-40.40c{1.} : %m%n%ex
 		</Property>
 	</Properties>
 
@@ -14,7 +14,7 @@
 
 		<!-- Rolling File Appender -->
 		<RollingFile name="FileAppender"
-			fileName="../logs/ms-core-com-persona"
+			fileName="../logs/ms-core-com-persona.log"
 			filePattern="../logs/ms-core-com-persona-%d{yyyy-MM}-%i.log">
 
 			<PatternLayout>
@@ -30,7 +30,7 @@
 	</Appenders>
 
 	<Loggers>
-		<AsyncLogger name="ec.telconet.persona" level="debug"
+		<AsyncLogger name="ec.telconet.persona" level="info"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />

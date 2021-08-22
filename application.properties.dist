@@ -1,7 +1,9 @@
-aplicacion.nombre: Ms Persona Test
+aplicacion.nombre: Ms Persona
 server.port=${port:1603}
+path.webservice=persona
 spring.kafka.bootstrap-servers=kafka-1:19092,kafka-2:29092,kafka-3:39092
 kafka.request-reply.timeout-ms=300s
+logging.level.org.apache.kafka.clients.admin.AdminClientConfig=ERROR
 
 # Log en consola para ver los pool de conexiones 
 #logging.level.com.zaxxer.hikari=DEBUG
@@ -13,14 +15,24 @@ host.parameter=localhost
 spring.datasource.hikari.idle-timeout=300000
 spring.datasource.hikari.connection-timeout=60000
 spring.datasource.hikari.maximum-pool-size=100
-spring.datasource.hikari.minimum-idle=10
+spring.datasource.hikari.minimum-idle=5
 spring.datasource.hikari.max-lifetime=600000
 
-#Log - "classpath:log4j2.xml" => Ambiente de desa, "file:/var/log4j2.xml" => Ambiente de prod
-logging.config: classpath:log4j2.xml
+#Log
+logging.config: log4j2.xml
 
 jaeger.tracer.host=
 jaeger.tracer.port=6831
 jaeger.tracer.logspan=false
-jaeger.tracer.nametracer=ms-core-persona
+jaeger.tracer.nametracer=ms-core-com-persona
 
+kafka.ms.topic-sync-sufijo=
+kafka.ms.topic-asyn-sufijo=
+
+management.endpoint.health.notification.mailTo=jdvinueza@telconet.ec;kjimenez@telconet.ec
+management.endpoint.health.notification.mailFrom=sistemas-qa@telconet.ec
+management.endpoint.health.notification.memoryPercentMax=95
+
+management.endpoint.health.show-details=ALWAYS
+management.endpoints.web.exposure.include=*
+management.endpoint.shutdown.enabled=true

@@ -1,4 +1,4 @@
-version: '3.3' 
+version: '3.4'
 
 services:
   NAME_SERVICE:
@@ -10,6 +10,11 @@ services:
     environment:
       - ipkfa=IPSKAFKA
       - "JAVA_OPTS=-Xms1024m -Xmx1024m"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:PUERTO/actuator/health" ]
+      interval: 60s
+      timeout: 10s
+      retries: 3
     volumes:
       - DIR_AMBIENTE/application.properties:/application.properties
       - DIR_AMBIENTE/log4j2.xml:/log4j2.xml
@@ -40,14 +45,13 @@ services:
         - traefik.http.middlewares.MIDDLEWARE-URLHeaders.headers.accessControlExposeHeaders=*
         - traefik.http.services.NAME_SERVICE.loadbalancer.server.port=PUERTO
         - traefik.http.routers.NAME_SERVICE.rule=Host(`ENVIRONMENTURL`) && PathPrefix(`/PATHPREF`)
-        - traefik.http.routers.NAME_SERVICE.rule=Host(`ENVIRONMENTURL`)
         - traefik.http.routers.NAME_SERVICE.middlewares=MIDDLEWARE-URLHeaders, MIDDLEWARE-URL
         - traefik.http.routers.NAME_SERVICE.service=NAME_SERVICE
         - traefik.docker.network=microservicio_swarm
         - traefik.http.routers.NAME_SERVICE.entrypoints=web
 
 networks:
-    microservicio_swarm:
-      external:
-            name: microservicio_swarm
+  microservicio_swarm:
+    external:
+      name: microservicio_swarm
             

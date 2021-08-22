@@ -2,6 +2,8 @@ package ec.telconet.persona.kafka;
 
 import java.util.UUID;
 
+import ec.telconet.microservicio.core.general.kafka.cons.CoreGeneralConstants;
+import ec.telconet.microservicio.dependencia.util.kafka.KafkaProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,29 @@ public class PersonaConsumer {
 	
 	@Autowired
 	PersonaEmpresaRolService personaEmpresaRolService;
-	
+
+	@Autowired
+	KafkaProperties kafkaProperties;
+
+	@Autowired
+	public PersonaConsumer(KafkaProperties kafkaProperties) {
+		String kafkaTopicSync = CoreComercialConstants.TOPIC_PERSONA_SYNC;
+		if (kafkaProperties.getTopicSyncSufijo() != null) {
+			kafkaTopicSync = kafkaTopicSync.concat(kafkaProperties.getTopicSyncSufijo());
+		}
+		kafkaProperties.setTopicSyncSufijo(kafkaTopicSync);
+		log.info("Topic kafka sync configurado: " + kafkaTopicSync);
+
+		String kafkaTopicAsyn = CoreComercialConstants.TOPIC_PERSONA_ASYN;
+		if (kafkaProperties.getTopicAsynSufijo() != null) {
+			kafkaTopicAsyn = kafkaTopicAsyn.concat(kafkaProperties.getTopicAsynSufijo());
+		}
+		kafkaProperties.setTopicAsynSufijo(kafkaTopicAsyn);
+		log.info("Topic kafka asyn configurado: " + kafkaTopicAsyn);
+
+		this.kafkaProperties = kafkaProperties;
+	}
+
 	/**
 	 * Listener asincrónico kafka
 	 * 
@@ -67,8 +91,8 @@ public class PersonaConsumer {
 	 * @param kafkaRequest
 	 * @throws GenericException
 	 */
-	@KafkaListener(topics = CoreComercialConstants.TOPIC_PERSONA_ASYN, groupId = CoreComercialConstants.GROUP_PERSONA, containerFactory = "kafkaListenerContainerFactory")
-	public void personaAsynchrotListener(KafkaRequest<?> kafkaRequest) throws GenericException {
+	@KafkaListener(topics = "#{kafkaProperties.getTopicAsynSufijo()}", groupId = CoreComercialConstants.GROUP_PERSONA, containerFactory = "kafkaListenerContainerFactory")
+	public void personaAsynchroListener(KafkaRequest<?> kafkaRequest) throws GenericException {
 		log.info("Petición kafka asincrónico recibida: " + kafkaRequest.getOp());
 		// EJECUCIONES ASINCRONICAS
 	}
@@ -86,9 +110,9 @@ public class PersonaConsumer {
 	 * @throws GenericException
 	 */
 	@SuppressWarnings("unchecked")
-	@KafkaListener(topics = CoreComercialConstants.TOPIC_PERSONA_SYNC, groupId = CoreComercialConstants.GROUP_PERSONA, containerFactory = "requestReplyListenerContainerFactory")
+	@KafkaListener(topics = "#{kafkaProperties.getTopicSyncSufijo()}", groupId = CoreComercialConstants.GROUP_PERSONA, containerFactory = "requestReplyListenerContainerFactory")
 	@SendTo()
-	public <T> KafkaResponse<T> personaSynChroListener(KafkaRequest<?> kafkaRequest, Acknowledgment commitKafka) throws GenericException {
+	public <T> KafkaResponse<T> personaSynchroListener(KafkaRequest<?> kafkaRequest, Acknowledgment commitKafka) throws GenericException {
 		String idTransKafka = UUID.randomUUID().toString();
 		log.info("Petición kafka sincrónico recibida: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
 		KafkaResponse<String> kafkaResponse = new KafkaResponse<String>();

@@ -1,6 +1,9 @@
 HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+mvnw
+mvnw.cmd
+.attach_pid*
 !**/src/main/**
 !**/src/test/**
 
@@ -31,3 +34,4 @@ build/
 .vscode/
 
 application.properties
+src/main/resources/log4j2.xml
