@@ -9,6 +9,9 @@ logging.level.org.apache.kafka.clients.admin.AdminClientConfig=ERROR
 #logging.level.com.zaxxer.hikari=DEBUG
 #spring.jpa.properties.hibernate.generate_statistics=true
 
+
+ms.equifax.procesar=http://localhost:5050/equifaxPersona
+
 #Parametros de base oracle
 ruta.parameterslocal=/home/mpluas/Repositorios/telcos/app/config/parameters.yml
 host.parameter=localhost
