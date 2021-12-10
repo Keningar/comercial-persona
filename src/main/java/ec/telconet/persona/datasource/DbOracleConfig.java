@@ -110,4 +110,47 @@ public class DbOracleConfig {
 		return new JpaTransactionManager(ComercialEMFactory);
 	}
 	// FIN CONFIGURACIÓN COMERCIAL
+	
+	// INICIO CONFIGURACIÓN GENERAL
+		@Bean(name = "dsGeneral")
+		public DataSource dsGeneral(@Qualifier("dsGeneralProperties") HikariConfig dataSourceConfig) {
+			return new HikariDataSource(dataSourceConfig);
+		}
+
+		@Bean(name = "dsGeneralProperties")
+		public HikariConfig dsGeneralConfig() throws Exception {
+			ArrayList<String> listaConexiones = new ArrayList<>();
+			listaConexiones.add("general");
+			HikariConfig dataSourceConfig = configdb.getConfig(listaConexiones, hostParameters, rutaParametersLocal);
+			dataSourceConfig.setPoolName("dsGeneral");
+			dataSourceConfig.setConnectionTimeout(connectionTimeout);
+			dataSourceConfig.setIdleTimeout(idleTimeout);
+			dataSourceConfig.setMaximumPoolSize(maxPoolSize);
+			dataSourceConfig.setMinimumIdle(minPoolSize);
+			dataSourceConfig.setMaxLifetime(maxLifetime);
+			dataSourceConfig.setValidationTimeout(10000);
+			dataSourceConfig.setConnectionTestQuery("SELECT 1 FROM DUAL");
+			dataSourceConfig.setConnectionInitSql("SELECT 1 FROM DUAL");
+			dataSourceConfig.addDataSourceProperty("oracle.jdbc.timezoneAsRegion", "false");
+			return dataSourceConfig;
+		}
+
+		@Bean(name = "jdbcGeneral")
+		@Autowired
+		public JdbcTemplate jdbcGeneralTemplate(@Qualifier("dsGeneral") DataSource dsGeneral) {
+			return new JdbcTemplate(dsGeneral);
+		}
+
+		@Bean(name = "GeneralEMFactory")
+		public LocalContainerEntityManagerFactoryBean entityManagerFactoryGeneral(EntityManagerFactoryBuilder builder,
+		                                                                          @Qualifier("dsGeneral") DataSource dsGeneral) {
+			return builder.dataSource(dsGeneral).properties(hibernateProperties())
+					.packages("ec.telconet.microservicios.dependencias.esquema.general.entity").persistenceUnit("dbGeneral").build();
+		}
+
+		@Bean(name = "GeneralTM")
+		public PlatformTransactionManager transactionManagerGeneral(@Qualifier("GeneralEMFactory") EntityManagerFactory GeneralEMFactory) {
+			return new JpaTransactionManager(GeneralEMFactory);
+		}
+		// FIN CONFIGURACIÓN GENERAL
 }

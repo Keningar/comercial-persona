@@ -14,9 +14,9 @@ import ec.telconet.microservicio.dependencia.util.response.GenericBasicResponse;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.EquifaxReqDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEquifaxRecomendacionResDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoReqDto;
-import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoRespDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.TarjetasEquifaxRecomendacionResDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
+import ec.telconet.persona.dto.PersonaProspectoRespDto;
 import ec.telconet.persona.service.PersonaProspectoService;
 import ec.telconet.persona.utils.PersonaUtils;
 

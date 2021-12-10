@@ -1,6 +1,5 @@
 package ec.telconet.persona.service;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +20,9 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPer
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaService;
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.impl.CmkgPersonaConsultaImpl;
 import ec.telconet.microservicios.dependencias.esquema.comercial.utils.ComercialValidators;
+import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiRol;
+import ec.telconet.microservicios.dependencias.esquema.general.repository.AdmiRolRepository;
+import ec.telconet.persona.dto.PersonaProspectoRespDto;
 import ec.telconet.persona.utils.PersonaUtils;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
 import ec.telconet.microservicio.dependencia.util.general.ConsumoWebService;
@@ -31,15 +33,12 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.EquifaxReqD
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEmpresaRolPorEmpresaActivoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEquifaxRecomendacionResDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoReqDto;
-import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoRespDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.TarjetasEquifaxRecomendacionResDto;
-import ec.telconet.microservicios.dependencias.esquema.comercial.entity.AdmiRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpFormaPago;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaReferido;
-import ec.telconet.microservicios.dependencias.esquema.comercial.repository.AdmiRolRepository;
 import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoEmpresaRolRepository;
 import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoPersonaRepository;
 
@@ -111,6 +110,7 @@ public class PersonaProspectoService {
 	      	{	
 	      		Optional<InfoEmpresaRol> empresaRol=	infoEmpresaRolRepository.findById(empresaRoles.get(i).getEmpresaRolId());
 	      		if(empresaRol.isPresent()) {
+	      			
 	      		    Optional<AdmiRol> admiRoles=	admiRolRepository.findById(empresaRol.get().getRolId());
 	          		response.getAdmiRoles().add(admiRoles.get());	
 
