@@ -4,20 +4,31 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=/dependencias-m2/.m2/repository"
   MAVEN_CLI_OPTS: "-s /dependencias-m2/.m2/dev-settings.xml --batch-mode"
 
+  SECURE_ANALYZERS_PREFIX: "registry.gitlab.telconet.ec/docker/images/spotbugs"
+  SAST_DEFAULT_ANALYZERS: "spotbugs"
+  SAST_EXCLUDED_PATHS: "spec, test, tests, tmp"
+  SCAN_KUBERNETES_MANIFESTS: "false"
+  SAST_JAVA_VERSION: 8
+
 stages:
   - VALIDATION
   - BUILD
+  - SCAN BUILD VULNERABILITIES
   - IMAGES
+  - SCAN IMAGES VULNERABILITIES
   - DEPLOY
   - MERGE
 
 include:
-  - template: microservice-dev-validation.gitlab-ci.yml
-  - template: microservice-dev-sonar.gitlab-ci.yml
-  - template: microservice-test-build.gitlab-ci.yml
-  - template: microservice-test-create-image.gitlab-ci.yml
-  - template: microservice-test-deploy.gitlab-ci.yml
-  - template: microservice-prod-build.gitlab-ci.yml
-  - template: microservice-prod-create-image.gitlab-ci.yml
-  - template: microservice-prod-deploy.gitlab-ci.yml
-  - template: microservice-prod-merge.gitlab-ci.yml
+  - template: dev-validation-microservicio.gitlab-ci.yml
+  - template: dev-sonar.gitlab-ci.yml
+  - template: dev-scan-vulnerabilities-java.gitlab-ci.yml
+  - template: scan-docker.gitlab-ci.yml
+  - template: scan-dependencies-java.gitlab-ci.yml
+  - template: microservicio-test-build.gitlab-ci.yml
+  - template: microservicio-test-create-image.gitlab-ci.yml
+  - template: microservicio-test-deploy.gitlab-ci.yml
+  - template: microservicio-prod-build.gitlab-ci.yml
+  - template: microservicio-prod-create-image.gitlab-ci.yml
+  - template: microservicio-prod-deploy.gitlab-ci.yml
+  - template: microservicio-prod-merge.gitlab-ci.yml

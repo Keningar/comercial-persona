@@ -73,11 +73,11 @@ public class PersonaApplication {
      *
      * @author Marlon Plúas <mailto:mpluas@telconet.ec>
      * @version 1.0
-     * @since 02/03/2020
+     * @since 05/05/2020
      */
     @Bean
     public ServletRegistrationBean<DispatcherServlet> dispatcherRegistration(DispatcherServlet dispatcherServlet) {
-        ServletRegistrationBean<DispatcherServlet> bean = new ServletRegistrationBean<DispatcherServlet>(dispatcherServlet, "/" + pathWebService + "/*");
+        ServletRegistrationBean<DispatcherServlet> bean = new ServletRegistrationBean<>(dispatcherServlet, "/" + pathWebService + "/*");
         bean.setAsyncSupported(true);
         bean.setName(pathWebService);
         bean.setLoadOnStartup(1);

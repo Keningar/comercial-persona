@@ -15,7 +15,7 @@
 		<!-- Rolling File Appender -->
 		<RollingFile name="FileAppender"
 			fileName="../logs/ms-core-com-persona.log"
-			filePattern="../logs/ms-core-com-persona-%d{yyyy-MM}-%i.log">
+			filePattern="../logs/ms-core-com-persona-%d{yyyy-MM-dd}-%i.log">
 
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>
