@@ -1,5 +1,7 @@
 package ec.telconet.persona.controller;
 
+import java.util.Collections;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ec.telconet.microservicio.dependencia.util.dto.PageDTO;
+import ec.telconet.microservicio.dependencia.util.general.Formato;
 import ec.telconet.microservicio.dependencia.util.response.GenericBasicResponse;
 import ec.telconet.microservicio.dependencia.util.response.GenericListResponse;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
@@ -43,10 +46,10 @@ public class PersonaEmpresaRolController {
 	 * @throws Exception
 	 */
 	@GetMapping("listaPersonaEmpresaRol")
-	public GenericListResponse<InfoPersonaEmpresaRol> listaPersonaEmpresaRol() throws Exception {
+	public GenericListResponse<Object> listaPersonaEmpresaRol() throws Exception {
 		log.info("Petición recibida: listaPersonaEmpresaRol");
-		GenericListResponse<InfoPersonaEmpresaRol> response = new GenericListResponse<InfoPersonaEmpresaRol>();
-		response.setData(personaEmpresaRolService.listaPersonaEmpresaRol());
+		GenericListResponse<Object> response = new GenericListResponse<>();
+		response.setData(Collections.singletonList(personaEmpresaRolService.listaPersonaEmpresaRol()));
 		return response;
 	}
 	
@@ -62,10 +65,10 @@ public class PersonaEmpresaRolController {
 	 * @throws Exception
 	 */
 	@PostMapping(path = "listaPersonaEmpresaRolPor", consumes = "application/json")
-	public GenericListResponse<InfoPersonaEmpresaRol> listaPersonaEmpresaRolPor(@RequestBody InfoPersonaEmpresaRol request) throws Exception {
+	public GenericListResponse<Object> listaPersonaEmpresaRolPor(@RequestBody Object request) throws Exception {
 		log.info("Petición recibida: listaPersonaEmpresaRolPor");
-		GenericListResponse<InfoPersonaEmpresaRol> response = new GenericListResponse<InfoPersonaEmpresaRol>();
-		response.setData(personaEmpresaRolService.listaPersonaEmpresaRolPor(request));
+		GenericListResponse<Object> response = new GenericListResponse<>();
+		response.setData(Collections.singletonList(personaEmpresaRolService.listaPersonaEmpresaRolPor(Formato.mapearObjDeserializado(request, InfoPersonaEmpresaRol.class))));
 		return response;
 	}
 	
@@ -81,11 +84,12 @@ public class PersonaEmpresaRolController {
 	 * @throws Exception
 	 */
 	@PostMapping(path = "paginaListaPersonaEmpresaRolPor", consumes = "application/json")
-	public GenericBasicResponse<Page<InfoPersonaEmpresaRol>> paginaListaPersonaEmpresaRolPor(@RequestBody PageDTO<InfoPersonaEmpresaRol> request)
+	public GenericBasicResponse<Page<Object>> paginaListaPersonaEmpresaRolPor(@RequestBody PageDTO<Object> request)
 			throws Exception {
 		log.info("Petición recibida: paginaListaPersonaEmpresaRolPor");
-		GenericBasicResponse<Page<InfoPersonaEmpresaRol>> response = new GenericBasicResponse<Page<InfoPersonaEmpresaRol>>();
-		response.setData(personaEmpresaRolService.paginaListaPersonaEmpresaRolPor(request));
-		return response;
+		GenericBasicResponse<Page<Object>> response = new GenericBasicResponse<>();
+	    Object objListaPersona = personaEmpresaRolService.paginaListaPersonaEmpresaRolPor(Formato.mapearPageObjDeserializado(request, InfoPersonaEmpresaRol.class));
+	    response.setData((Page<Object>) objListaPersona);
+	    return response;
 	}
 }
