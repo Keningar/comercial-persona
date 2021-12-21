@@ -16,7 +16,7 @@
     <description>MS Personas</description>
 
     <properties>
-        <version>1.1.0-RELEASE</version>
+        <version>1.1.1-RELEASE</version>
         <version.ms-core>1.1.5-RELEASE</version.ms-core>
         <version.db-config>1.0.0-RELEASE</version.db-config>
         <version.ms-core-general>1.0.6-RELEASE</version.ms-core-general>

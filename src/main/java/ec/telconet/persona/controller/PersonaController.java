@@ -1,6 +1,7 @@
 package ec.telconet.persona.controller;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,8 @@ public class PersonaController {
 	public GenericListResponse<Object> listaPersona() throws Exception {
 		log.info("Petición recibida: listaPersona");
 		GenericListResponse<Object> response = new GenericListResponse<>();
-		response.setData(Collections.singletonList(personaService.listaPersona()));
+		Object listaPersona = personaService.listaPersona();
+		response.setData((List<Object>) listaPersona);
 		return response;
 	}
 	
@@ -73,7 +75,8 @@ public class PersonaController {
 	public GenericListResponse<Object> listaPersonaPor(@RequestBody Object request) throws Exception {
 		log.info("Petición recibida: listaPersonaPor");
 		GenericListResponse<Object> response = new GenericListResponse<>();
-		response.setData(Collections.singletonList(personaService.listaPersonaPor(Formato.mapearObjDeserializado(request, InfoPersona.class))));
+		Object listaPersona = personaService.listaPersonaPor(Formato.mapearObjDeserializado(request, InfoPersona.class));
+		response.setData((List<Object>) listaPersona);
 		return response;
 	}
 	
@@ -112,7 +115,8 @@ public class PersonaController {
 	public GenericListResponse<Object> listaPersonaPorRegion(@RequestBody PersonaPorRegionReqDTO request) throws Exception {
 		log.info("Petición recibida: listaPersonaPorRegion");
 		GenericListResponse<Object> response = new GenericListResponse<>();
-		response.setData(Collections.singletonList(personaService.listaPersonaPorRegion(Formato.mapearObjDeserializado(request, PersonaPorRegionReqDTO.class))));
+		Object listaPersona = personaService.listaPersonaPorRegion(Formato.mapearObjDeserializado(request, PersonaPorRegionReqDTO.class));
+		response.setData((List<Object>) listaPersona);
 		return response;
 	}
 	
@@ -131,7 +135,8 @@ public class PersonaController {
 	public GenericListResponse<Object> listaPersonaPorRol(@RequestBody PersonaPorRolReqDTO request) throws Exception {
 		log.info("Petición recibida: listaPersonaPorRol");
 		GenericListResponse<Object> response = new GenericListResponse<>();
-		response.setData(Collections.singletonList(personaService.listaPersonaPorRol(Formato.mapearObjDeserializado(request, PersonaPorRolReqDTO.class))));
+		Object listaPersona = personaService.listaPersonaPorRol(Formato.mapearObjDeserializado(request, PersonaPorRolReqDTO.class));
+		response.setData((List<Object>) listaPersona);
 		return response;
 	}
 	
@@ -150,9 +155,9 @@ public class PersonaController {
 	public GenericListResponse<Object> listaPersonaPorDepartamento(@RequestBody Object request) throws Exception {
 		log.info("Petición recibida: listaPersonaPorDepartamento");
 		GenericListResponse<Object> response = new GenericListResponse<>();
-		response.setData(Collections.
-				singletonList(personaService.listaPersonaPorDepartamento(
-						Formato.mapearObjDeserializado(request, PersonaPorDepartamentoReqDTO.class))));
+		Object listaPersona = personaService.listaPersonaPorDepartamento(
+				Formato.mapearObjDeserializado(request, PersonaPorDepartamentoReqDTO.class));
+		response.setData((List<Object>) listaPersona);
 		return response;
 	}
 	
@@ -171,7 +176,8 @@ public class PersonaController {
 	public GenericListResponse<Object> listaPersonaPorEmpresa(@RequestBody PersonaPorEmpresaReqDTO request) throws Exception {
 		log.info("Petición recibida: listaPersonaPorEmpresa");
 		GenericListResponse<Object> response = new GenericListResponse<>();
-		response.setData(Collections.singletonList(personaService.listaPersonaPorEmpresa(Formato.mapearObjDeserializado(request, PersonaPorEmpresaReqDTO.class))));
+		Object listaPersona = personaService.listaPersonaPorEmpresa(Formato.mapearObjDeserializado(request, PersonaPorEmpresaReqDTO.class));
+		response.setData((List<Object>) listaPersona);
 		return response;
 	}
 }

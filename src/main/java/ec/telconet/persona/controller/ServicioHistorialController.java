@@ -1,6 +1,7 @@
 package ec.telconet.persona.controller;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,8 +49,9 @@ public class ServicioHistorialController {
 			throws Exception {
 		log.info("Petición recibida: listaHistorialServicioPorFecha");
 		GenericListResponse<Object> response = new GenericListResponse<>();
-		response.setData(Collections.singletonList(servicioHistorialService.
-				listaHistorialServicioPorFecha(Formato.mapearObjDeserializado(request, HistorialServicioPorFechaReqDTO.class))));
+		Object objListaPersona = servicioHistorialService.
+		listaHistorialServicioPorFecha(Formato.mapearObjDeserializado(request, HistorialServicioPorFechaReqDTO.class));
+		response.setData((List<Object>) objListaPersona);
 		return response;
 	}
 }
