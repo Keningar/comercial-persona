@@ -26,6 +26,7 @@ import ec.telconet.microservicio.dependencia.util.kafka.KafkaResponse;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.HistorialServicioPorFechaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoUsuarioReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoUsuarioResDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorCaractReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorDepartamentoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
@@ -44,6 +45,11 @@ import ec.telconet.persona.service.ServicioHistorialService;
  * @author Marlon Plúas <mailto:mpluas@telconet.ec>
  * @version 1.0
  * @since 02/03/2020
+ *
+ * @author Wilson Quinto <mailto:wquinto@telconet.ec>
+ * @version 1.2
+ * @since 12/12/2021 - Implementacion en servicio de kafka de consulta de persona por carateristicas
+ *
  */
 @Component
 public class ServiceConsumer {
@@ -167,10 +173,20 @@ public class ServiceConsumer {
 				// Inicio Proceso logico
 				PersonaPorRolReqDTO requestService = Formato.mapearObjDeserializado(data, PersonaPorRolReqDTO.class);
 				// Fin Proceso logico
-				KafkaResponse<InfoPersona> response = new KafkaResponse<InfoPersona>();
+				KafkaResponse<InfoPersona> response = new KafkaResponse<>();
 				response.setData(personaService.listaPersonaPorRol(requestService));
 				commitKafka.acknowledge();
-				log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
+				log.info("Petición kafka sincrónico enviada: {} Transacción: {}",kafkaRequest::getOp, idTransKafka::toString);
+				return (KafkaResponse<T>) response;
+			}else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_POR_CARACT)) {
+				PersonaKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaKafkaReq.class);
+				// Inicio Proceso logico
+				PersonaPorCaractReqDTO requestService = Formato.mapearObjDeserializado(data, PersonaPorCaractReqDTO.class);
+				// Fin Proceso logico
+				KafkaResponse<InfoPersona> response = new KafkaResponse<>();
+				response.setData(personaService.listaPersonaPorCaract(requestService));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: {} Transacción: {}",kafkaRequest::getOp, idTransKafka::toString);
 				return (KafkaResponse<T>) response;
 			} else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_POR_DEPARTAMENTO)) {
 				PersonaKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaKafkaReq.class);

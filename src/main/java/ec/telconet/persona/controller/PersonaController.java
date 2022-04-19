@@ -1,6 +1,5 @@
 package ec.telconet.persona.controller;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +16,8 @@ import ec.telconet.microservicio.dependencia.util.dto.PageDTO;
 import ec.telconet.microservicio.dependencia.util.general.Formato;
 import ec.telconet.microservicio.dependencia.util.response.GenericBasicResponse;
 import ec.telconet.microservicio.dependencia.util.response.GenericListResponse;
-import ec.telconet.microservicios.dependencias.esquema.comercial.dto.HistorialServicioPorFechaReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoPersonaDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorCaractReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorDepartamentoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
@@ -32,6 +32,11 @@ import ec.telconet.persona.service.PersonaService;
  * @author Marlon Plúas <mailto:mpluas@telconet.ec>
  * @version 1.0
  * @since 02/03/2020
+ *
+ * @author Wilson Quinto <mailto:wquinto@telconet.ec>
+ * @version 1.1
+ * @since 12/12/2021 - creacion de capacidad para consulta de persona por caracteristica
+ *
  */
 @RestController
 @RequestMapping
@@ -178,6 +183,26 @@ public class PersonaController {
 		GenericListResponse<Object> response = new GenericListResponse<>();
 		Object listaPersona = personaService.listaPersonaPorEmpresa(Formato.mapearObjDeserializado(request, PersonaPorEmpresaReqDTO.class));
 		response.setData((List<Object>) listaPersona);
+		return response;
+	}
+	
+	/**
+	 * Método que retorna la lista de personas por caracteristicas
+	 * 
+	 * @author Wilson Quinto <mailto:wquinto@telconet.ec>
+	 * @version 1.0
+	 * @since 19/11/2021
+	 * 
+	 * @param request {@linkplain PersonaPorCaractReqDTO}
+	 * @return {@linkplain GenericListResponse}
+	 * @throws Exception
+	 */
+	@PostMapping(path = "listaPersonaPorCaract", consumes = "application/json", produces = "application/json")
+	public GenericListResponse<InfoPersonaDTO> listaPersonaPorCaract(@RequestBody PersonaPorCaractReqDTO request) throws Exception {
+		log.info("Petición recibida: listaPersonaPorRol");
+		GenericListResponse<InfoPersonaDTO> response = new GenericListResponse<>();
+		List<InfoPersonaDTO> infoPersonaDTO=Formato.mapearListObjDeserializado(personaService.listaPersonaPorCaract(request), InfoPersonaDTO.class);
+		response.setData(infoPersonaDTO);
 		return response;
 	}
 }

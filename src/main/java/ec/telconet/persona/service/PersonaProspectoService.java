@@ -26,7 +26,6 @@ import ec.telconet.persona.dto.PersonaProspectoRespDto;
 import ec.telconet.persona.utils.PersonaUtils;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
 import ec.telconet.microservicio.dependencia.util.general.ConsumoWebService;
-import ec.telconet.microservicios.dependencias.esquema.comercial.dto.BuscarEmpresasRolEstadosReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.DataPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.DatosEquifax;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.EquifaxReqDto;

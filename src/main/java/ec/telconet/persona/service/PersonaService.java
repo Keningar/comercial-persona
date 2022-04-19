@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ec.telconet.microservicio.dependencia.util.dto.PageDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorCaractReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorDepartamentoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
@@ -136,5 +137,21 @@ public class PersonaService {
 	@Transactional(readOnly = true)
 	public List<InfoPersona> listaPersonaPorEmpresa(PersonaPorEmpresaReqDTO request) throws Exception {
 		return infoPersonaService.personaPorEmpresa(request);
+	}
+	
+	/**
+	 * Método que retorna la lista de personas por caracteristica
+	 * 
+	 * @author Wilson Quinto <mailto:wquinto@telconet.ec>
+	 * @version 1.0
+	 * @since 19/11/2021
+	 * 
+	 * @param request {@link PersonaPorCaractReqDTO}
+	 * @return List<InfoPersona>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<InfoPersona> listaPersonaPorCaract(PersonaPorCaractReqDTO request) throws Exception {
+		return infoPersonaService.personaPorCaract(request);
 	}
 }
