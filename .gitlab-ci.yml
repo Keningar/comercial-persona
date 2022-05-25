@@ -21,16 +21,16 @@ stages:
   - MERGE
 
 include:
-  - template: dev-validation-microservicio-v1.gitlab-ci.yml
-  - template: dev-sonar-v1.gitlab-ci.yml
-  - template: dev-build-v1.gitlab-ci.yml
-  - template: dev-scan-vulnerabilities-java-v1.gitlab-ci.yml
-  - template: dev-scan-dependencies-java-v1.gitlab-ci.yml
-  - template: dev-scan-docker-java-v1.gitlab-ci.yml
-  - template: microservicio-test-build-v1.gitlab-ci.yml
-  - template: microservicio-test-create-image-v1.gitlab-ci.yml
-  - template: microservicio-test-deploy-v1.gitlab-ci.yml
-  - template: microservicio-prod-build-v1.gitlab-ci.yml
-  - template: microservicio-prod-create-image-v1.gitlab-ci.yml
-  - template: microservicio-prod-deploy-v1.gitlab-ci.yml
-  - template: microservicio-prod-merge-v1.gitlab-ci.yml
+  - template: sis-docker-validacion-microservicio.gitlab-ci.yml
+  - template: sis-docker-sonar-microservicio.gitlab-ci.yml
+  - template: sis-docker-build-microservicio.gitlab-ci.yml
+  - template: sis-docker-scan-vulnerabilities-java.gitlab-ci.yml
+  - template: sis-docker-scan-dependencies-java.gitlab-ci.yml
+  - template: sis-docker-scan-docker-java.gitlab-ci.yml
+  - template: sis-docker-build-test-microservicio.gitlab-ci.yml
+  - template: sis-docker-build-prod-microservicio.gitlab-ci.yml
+  - template: sis-docker-create-image-test-microservicio.gitlab-ci.yml
+  - template: sis-docker-create-image-prod-microservicio.gitlab-ci.yml
+  - template: sis-docker-deploy-test-microservicio.gitlab-ci.yml
+  - template: sis-docker-deploy-prod-microservicio.gitlab-ci.yml
+  - template: sis-docker-prod-merge-microservicio.gitlab-ci.yml
