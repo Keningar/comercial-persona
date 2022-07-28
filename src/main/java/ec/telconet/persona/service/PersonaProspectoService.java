@@ -20,8 +20,14 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPer
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaService;
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.impl.CmkgPersonaConsultaImpl;
 import ec.telconet.microservicios.dependencias.esquema.comercial.utils.ComercialValidators;
+import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiBanco;
+import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiBancoTipoCuenta;
 import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiRol;
+import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiTipoCuenta;
+import ec.telconet.microservicios.dependencias.esquema.general.repository.AdmiBancoRepository;
+import ec.telconet.microservicios.dependencias.esquema.general.repository.AdmiBancoTipoCuentaRepository;
 import ec.telconet.microservicios.dependencias.esquema.general.repository.AdmiRolRepository;
+import ec.telconet.microservicios.dependencias.esquema.general.repository.AdmiTipoCuentaRepository;
 import ec.telconet.persona.dto.PersonaProspectoRespDto;
 import ec.telconet.persona.utils.PersonaUtils;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
@@ -29,9 +35,12 @@ import ec.telconet.microservicio.dependencia.util.general.ConsumoWebService;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.DataPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.DatosEquifax;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.EquifaxReqDto;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoPersonaEmpFormaPagoDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PerfilPersonaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEmpresaRolPorEmpresaActivoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEquifaxRecomendacionResDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoReqDto;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.SeguPerfilPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.TarjetasEquifaxRecomendacionResDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
@@ -82,6 +91,17 @@ public class PersonaProspectoService {
 	
 	@Value("${ms.equifax.procesar}")
     String wsEquifaxProcesar;
+	
+	@Autowired
+	AdmiBancoTipoCuentaRepository admiBancoTipoCuentaRepository;
+	
+	
+	@Autowired
+	AdmiBancoRepository admiBancoRepository;
+	
+	@Autowired
+	AdmiTipoCuentaRepository admiTipoCuentaRepository;
+	
 
 	
 	public PersonaProspectoRespDto personaProspecto(@RequestBody PersonaProspectoReqDto request) throws Exception {	    
@@ -116,7 +136,7 @@ public class PersonaProspectoService {
 	      		}  	
 	      	}	  	    
 	  	    ///Obtengo todas ls formas de pago 
-	  		List<InfoPersonaEmpFormaPago> formasPago= cmkgPersonaConsultaImpl.datosPersonaEmpFormaPago(requestConsulta);
+	  		List<InfoPersonaEmpFormaPagoDTO> formasPago= formaPagoProspecto(requestConsulta);
 	  		if(!formasPago.isEmpty()) 
 	  		{	    	
 	  		 response.setFormaPago(formasPago.get(0));
@@ -136,6 +156,44 @@ public class PersonaProspectoService {
 	    }	  	    
 	  	return response;
 	  }
+	
+	
+	public List<InfoPersonaEmpFormaPagoDTO>  formaPagoProspecto(PersonaEmpresaRolPorEmpresaActivoReqDTO request) throws GenericException {
+        //Obtengo todas las formas de pago 
+  		List<InfoPersonaEmpFormaPagoDTO> formasPago= cmkgPersonaConsultaImpl.datosPersonaEmpFormaPago(request);		
+  		for(InfoPersonaEmpFormaPagoDTO pagos:formasPago) {
+  			
+  			if(pagos.getBancoTipoCuentaId()!=null) {
+  				
+  				Optional<AdmiBancoTipoCuenta> admiBancoTipoCuenta=	admiBancoTipoCuentaRepository.findById(pagos.getBancoTipoCuentaId());
+  								
+  				Optional<AdmiBanco> admiBanco=admiBancoRepository.findById(admiBancoTipoCuenta.get().getBancoId());  
+  				pagos.setIdBanco(admiBanco.get().getIdBanco());
+  				pagos.setDescripcionBanco(admiBanco.get().getDescripcionBanco());
+  			
+  				
+  				Optional<AdmiTipoCuenta> admiTipoCuenta=admiTipoCuentaRepository.findById(admiBancoTipoCuenta.get().getTipoCuentaId());  
+  				pagos.setTipoCuentaId(admiTipoCuenta.get().getIdTipoCuenta());
+  				pagos.setDescripcionCuenta(admiTipoCuenta.get().getDescripcionCuenta());  				
+  				
+  			}
+  			
+  			
+  		}
+  		
+  		
+  		
+	    return formasPago;
+	}
+	
+	
+	
+	public List<SeguPerfilPersonaDTO> validarPerfilPersona(PerfilPersonaReqDTO request) throws GenericException{
+         return cmkgPersonaConsultaImpl.validarPerfilPersona(request);
+	}
+	
+	
+	
 	
 	public EquifaxReqDto convertRequestPersonaRecomendacion(PersonaProspectoReqDto request)throws Exception {       
 		EquifaxReqDto nuevo=new  EquifaxReqDto();

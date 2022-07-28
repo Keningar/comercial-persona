@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ec.telconet.microservicio.dependencia.util.response.GenericBasicResponse;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.EquifaxReqDto;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEmpresaRolPorEmpresaActivoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEquifaxRecomendacionResDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoReqDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.TarjetasEquifaxRecomendacionResDto;
@@ -109,7 +110,25 @@ public class PersonaProspectoController {
 	
 	
 	
+	/**
+	 * Método que retorna la información de pago la persona relaciona al prospecto
+	 * 
+	 * @author Carlos Caguana <mailto:ccaguana@telconet.ec>
+	 * @version 1.0
+	 * @since 21/08/2020
+	 * 
+	 * @param request {@linkplain PersonaEmpresaRolPorEmpresaActivoReqDTO}
+	 * @return {@linkplain GenericBasicResponse InfoPersonaEmpFormaPagoDTO}
+	 * @throws Exception
+	 */
 	
+	@PostMapping(path = "getFormaPagoProspecto", consumes = "application/json")
+	public GenericBasicResponse<Object> getFormaPagoProspecto(@RequestBody PersonaEmpresaRolPorEmpresaActivoReqDTO request) throws Exception {
+		log.info("Petición recibida: tarjetaRecomendacion");
+		GenericBasicResponse<Object> response = new GenericBasicResponse<Object>();
+		response.setData(personaProspectoService.formaPagoProspecto(request));
+		return response;
+	}
 	
 		
 

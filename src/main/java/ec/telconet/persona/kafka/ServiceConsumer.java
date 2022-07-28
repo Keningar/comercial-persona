@@ -23,19 +23,26 @@ import ec.telconet.microservicio.dependencia.util.exception.GenericException;
 import ec.telconet.microservicio.dependencia.util.general.Formato;
 import ec.telconet.microservicio.dependencia.util.kafka.KafkaRequest;
 import ec.telconet.microservicio.dependencia.util.kafka.KafkaResponse;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.GetTimeandInfoPersonReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.GetTimeandInfoPersonResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.HistorialServicioPorFechaReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoPersonaEmpFormaPagoDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoUsuarioReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoUsuarioResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorCaractReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PerfilPersonaReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEmpresaRolPorEmpresaActivoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorDepartamentoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.SeguPerfilPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoServicioHistorial;
 import ec.telconet.persona.service.ConsultasService;
 import ec.telconet.persona.service.PersonaEmpresaRolService;
+import ec.telconet.persona.service.PersonaProspectoService;
 import ec.telconet.persona.service.PersonaService;
 import ec.telconet.persona.service.ServicioHistorialService;
 
@@ -70,6 +77,9 @@ public class ServiceConsumer {
 	@Autowired
 	PersonaEmpresaRolService personaEmpresaRolService;
 
+	@Autowired
+	PersonaProspectoService personaProspectoService;
+	
 	@Autowired
 	KafkaProperties kafkaProperties;
 
@@ -244,7 +254,26 @@ public class ServiceConsumer {
 				commitKafka.acknowledge();
 				log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
 				return (KafkaResponse<T>) response;
-			} else {
+			} else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_FORMA_PAGO_PROSPECTO)) {
+				PersonaEmpresaRolPorEmpresaActivoReqDTO  requestService = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaEmpresaRolPorEmpresaActivoReqDTO .class);
+				KafkaResponse<InfoPersonaEmpFormaPagoDTO> response = new KafkaResponse<>();
+				response.setData(personaProspectoService.formaPagoProspecto(requestService));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
+				return (KafkaResponse<T>) response;
+			} else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_VALIDAR_PERFIL_PESONA)) {
+				PerfilPersonaReqDTO  requestService = Formato.mapearObjDeserializado(kafkaRequest.getData(), PerfilPersonaReqDTO .class);
+				KafkaResponse<SeguPerfilPersonaDTO> response = new KafkaResponse<>();
+				response.setData(personaProspectoService.validarPerfilPersona(requestService));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
+				return (KafkaResponse<T>) response;
+			} 
+			
+			
+			
+			
+		else {
 				kafkaResponse.setCode(500);
 				kafkaResponse.setStatus("ERROR");
 				kafkaResponse.setMessage(

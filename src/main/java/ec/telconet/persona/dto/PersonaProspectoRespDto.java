@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.DataPersonaDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoPersonaEmpFormaPagoDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpFormaPago;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
@@ -17,7 +18,7 @@ public class PersonaProspectoRespDto {
 	List<AdmiRol>admiRoles=new ArrayList<AdmiRol>();
 	List<InfoPersonaEmpresaRol>empresaRoles=new ArrayList<InfoPersonaEmpresaRol>();
 	InfoPersona personaReferido;
-	InfoPersonaEmpFormaPago formaPago;
+	InfoPersonaEmpFormaPagoDTO formaPago;
 	Boolean isRecomendado=false;
 	
 }
