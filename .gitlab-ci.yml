@@ -9,28 +9,33 @@ variables:
   SAST_EXCLUDED_PATHS: "spec, test, tests, tmp"
   SCAN_KUBERNETES_MANIFESTS: "false"
   SECURE_LOG_LEVEL: "debug"
-  SAST_JAVA_VERSION: 8
+  SAST_JAVA_VERSION: 11
 
 stages:
   - VALIDATION
   - QUALITY CODE
   - SCAN DEV VULNERABILITIES
+  - CONFIG ENVIRONMENT QA
   - BUILD
   - IMAGES
+  - TEST DEPLOY
+  - DONE DEPLOY
   - DEPLOY
   - MERGE
 
 include:
   - template: sis-docker-validacion-microservicio.gitlab-ci.yml
   - template: sis-docker-sonar-microservicio.gitlab-ci.yml
-  - template: sis-docker-build-microservicio.gitlab-ci.yml
+  - template: sis-docker-build-microservicio-v2.gitlab-ci.yml
   - template: sis-docker-scan-vulnerabilities-java.gitlab-ci.yml
   - template: sis-docker-scan-dependencies-java.gitlab-ci.yml
   - template: sis-docker-scan-docker-java.gitlab-ci.yml
-  - template: sis-docker-build-test-microservicio.gitlab-ci.yml
-  - template: sis-docker-build-prod-microservicio.gitlab-ci.yml
+  - template: sis-docker-copy-environment-test.gitlab-ci.yml
+  - template: sis-docker-build-test-microservicio-v2.gitlab-ci.yml
+  - template: sis-docker-build-prod-microservicio-v2.gitlab-ci.yml
   - template: sis-docker-create-image-test-microservicio.gitlab-ci.yml
   - template: sis-docker-create-image-prod-microservicio.gitlab-ci.yml
-  - template: sis-docker-deploy-test-microservicio.gitlab-ci.yml
-  - template: sis-docker-deploy-prod-microservicio.gitlab-ci.yml
+  - template: sis-docker-copy-redis-done.gitlab-ci.yml
+  - template: sis-docker-deploy-test-microservicio-v1.gitlab-ci.yml
+  - template: sis-docker-deploy-prod-microservicio-v1.gitlab-ci.yml
   - template: sis-docker-prod-merge-microservicio.gitlab-ci.yml
