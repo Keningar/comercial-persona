@@ -1,6 +1,5 @@
 package ec.telconet.persona.controller;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
