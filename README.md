@@ -21,35 +21,34 @@ application.properties.dist
 application.properties
  y de ser necesario modificar los siguientes parámetros:
 
-| Clave                          | Valor                                     | Observación                                                                                                                                   |
-|--------------------------------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| server.port                    | ${port:1603}                              | Puerto del ms.                                                                                                                                |
-| spring.kafka.bootstrap-servers | kafka-1:19092,kafka-2:29092,kafka-3:39092 | Servidores kafka.  Validar que en su archivo host se encuentre las siguientes líneas ![imagen_kafka](/res/host_kafka.png?raw=true)                                                                                                                           |
-| path.webservice                    | persona               | Path url.                                                                                                      |
-| kafka.request-reply.timeout-ms         | 300s                                   | Configuración del kafka. |
-| logging.level.org.apache.kafka.clients.admin.AdminClientConfig            | ERROR                      | Configuración del kafka.                                                                                 |
-| ms.equifax.procesar            | http://localhost:5050/equifaxPersona                      | URL de Equifax.                                                                                 |
-| ruta.parameterslocal           | /home/mpluas/Repositorios/telcos/app/config/parameters.yml                      | Ubicación del parameters.yml.                                                                                 |
-| host.parameter            | localhost                      | host parameter.           |
-| spring.datasource.hikari.idle-timeout            | 300000                      | Configuración del ms           |  
-| spring.datasource.hikari.connection-timeout           | 600000                      | Configuración del ms           |  
-| spring.datasource.hikari.maximum-pool-size           | 100                      | Configuración del ms           |  
-| spring.datasource.hikari.minimum-idle          | 5                      | Configuración del ms           |  
-| spring.datasource.hikari.max-lifetime          | 600000                | Configuración del ms           |  
-| logging.config          | log4j2.xml                | Configuración del ms           |  
-| jaeger.tracer.host          |                | Configuración del jagger           |  
-| jaeger.tracer.port         |       6831         | Configuración del jagger           |  
-| jaeger.tracer.logspan         |       false         | Configuración del jagger           |  
-| jaeger.tracer.nametracer         |       ms-core-com-persona         | Configuración del jagger           |  
-| kafka.ms.topic-sync-sufijo         |                | Cola de kafka          |  
-| kafka.ms.topic-asyn-sufijo        |                | Cola de kafka          |  
-| management.endpoint.health.notification.mailTo       |       jdvinueza@telconet.ec;kjimenez@telconet.ec         | Configuración de ms         |  
-| management.endpoint.health.notification.mailFrom      |       sistemas-qa@telconet.ec         | Configuración de ms         |  
-| management.endpoint.health.notification.memoryPercentMax      |       95        | Configuración de ms         |  
-| management.endpoint.health.show-details      |       ALWAYS        | Configuración de ms         |  
-| management.endpoints.web.exposure.include      |       *        | Configuración de ms         |  
-| management.endpoint.shutdown.enabled      |       true        | Configuración de ms         |  
-
+| Clave                                                             | Observación                                                                              |
+|-------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| aplicacion.nombre                                                 | Nombre de la aplicación.                                                                 |
+| server.port                                                       | Puerto del ms.                                                                           |
+| path.webservice                                                   | path del Microservicio                                                                   |
+| spring.kafka.bootstrap-servers                                    | Definir los servidores de kafka.                                                         |
+| kafka.request-reply.timeout-ms                                    | Tiempo en minutos de un petición kafka.                                                  |
+| logging.level.org.apache.kafka.clients.admin.AdminClientConfig    | Configuracion de cliente kafka                                                           |
+| ruta.parameterslocal                                              | Ruta de parameters.yml.                                                                  |
+| host.parameter                                                    | Host o ambiente de parameters.yml.                                                       |
+| spring.datasource.hikari.idle-timeout                             | Idle timeout hikari.                                                                     |
+| spring.datasource.hikari.connection-timeout                       | Conexión timeout hikari.                                                                 |
+| spring.datasource.hikari.maximum-pool-size                        | Máximo de pool de conexiones hikari.                                                     |
+| spring.datasource.hikari.minimum-idle                             | Mínimo de pool de conexiones hikari.                                                     |
+| spring.datasource.hikari.max-lifetime                             | Maximo de tiempo de vida de un pool.                                                     |
+| logging.config                                                    | Mínimo de pool de conexiones hikari.                                                     |
+| jaeger.tracer.host                                                | Definir el servidor jaeger.                                                              |
+| jaeger.tracer.port                                                | Definir el puerto jaeger.                                                                |
+| jaeger.tracer.logspan                                             | Definir el logspan jaeger.                                                               |
+| jaeger.tracer.nametracer                                          | Definir el nametracer jaeger                                                             |
+| kafka.ms.topic-sync-sufijo                                        | Sufijo topic sync.                                                                       |
+| kafka.ms.topic-asyn-sufijo                                        | Sufijo topic async.                                                                      |
+| management.endpoint.health.notification.mailTo                    | Correo destino para Notificacion de email.                                               |
+| management.endpoint.health.notification.mailFrom                  | Correo remitemte para Notificacion de email                                              |
+| management.endpoint.health.notification.memoryPercentMax          | MemoryPercent Max para notificacion email                                                |
+| management.endpoint.health.show-details                           | Mostrar detalles                                                                         |
+| management.endpoints.web.exposure.include                         | Exponer endpoints.                                                                       |
+| management.endpoint.shutdown.enabled                              | Habilitar shutdown                                                                       |
 
   
 ## Funcionalidades  

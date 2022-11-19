@@ -15,11 +15,14 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 import ec.telconet.microservicio.core.comercial.kafka.cons.CoreComercialConstants;
+import ec.telconet.microservicio.core.comercial.kafka.request.AdmiCaracteristicaKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.HistorialServicioKafkaReq;
+import ec.telconet.microservicio.core.comercial.kafka.request.InfoClienteNotMasivaDetKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.InfoUsuarioKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaEmpresaRolCaracKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaEmpresaRolKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaKafkaReq;
+import ec.telconet.microservicio.core.comercial.kafka.response.InfoClienteNotMasivaDetKafkaRes;
 import ec.telconet.microservicio.core.comercial.kafka.response.PersonaEmpresaRolKafkaRes;
 import ec.telconet.microservicio.core.comercial.kafka.response.PersonaKafkaRes;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
@@ -28,6 +31,8 @@ import ec.telconet.microservicio.dependencia.util.kafka.KafkaRequest;
 import ec.telconet.microservicio.dependencia.util.kafka.KafkaResponse;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.HistorialServicioPorFechaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoPersonaEmpFormaPagoDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoClienteNotMasivaDetReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoClienteNotMasivaDetResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoUsuarioReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoUsuarioResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorCaractReqDTO;
@@ -38,6 +43,7 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorE
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.SeguPerfilPersonaDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.entity.AdmiCaracteristica;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRolCarac;
@@ -82,7 +88,8 @@ public class ServiceConsumer {
 
 	@Autowired
 	PersonaProspectoService personaProspectoService;
-	
+
+	@Autowired
 	PersonaEmpresaRolCaracService personaEmpresaRolCaracService;
 
 	@Autowired
@@ -258,6 +265,25 @@ public class ServiceConsumer {
 				KafkaResponse<PersonaEmpresaRolKafkaRes> response = new KafkaResponse<>();
 				List<InfoPersonaEmpresaRol> listaPersonasEmpresaRol = personaEmpresaRolService.listaPersonaEmpresaRolPor(requestService);
 				response.setData(Formato.mapearListObjDeserializado(listaPersonasEmpresaRol, PersonaEmpresaRolKafkaRes.class));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: {}, Transacción: {}", kafkaRequest.getOp(), idTransKafka);
+				return (KafkaResponse<T>) response;
+			
+			}else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_CARACTERISTICA_POR)){
+				AdmiCaracteristicaKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), AdmiCaracteristicaKafkaReq.class);
+				AdmiCaracteristica requestService = Formato.mapearObjDeserializado(data, AdmiCaracteristica.class);
+				KafkaResponse<AdmiCaracteristicaKafkaReq> response = new KafkaResponse<>();
+				List<AdmiCaracteristica> admiCaracteristica = consultasService.listarCaracteristicaPor(requestService);
+				response.setData(Formato.mapearListObjDeserializado(admiCaracteristica,AdmiCaracteristicaKafkaReq.class));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: {}, Transacción: {}", kafkaRequest.getOp(), idTransKafka);
+				return (KafkaResponse<T>) response;
+			}else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_CLIENTE_NOT_MASIVA_DET)){
+				InfoClienteNotMasivaDetKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), InfoClienteNotMasivaDetKafkaReq.class);
+				InfoClienteNotMasivaDetReqDTO requestService = Formato.mapearObjDeserializado(data, InfoClienteNotMasivaDetReqDTO.class);
+				KafkaResponse<InfoClienteNotMasivaDetKafkaRes> response = new KafkaResponse<>();
+				List<InfoClienteNotMasivaDetResDTO> infoClienteNotMasivaDetRes = consultasService.listarClienteNotMasivaDet(requestService);
+				response.setData(Formato.mapearListObjDeserializado(infoClienteNotMasivaDetRes,InfoClienteNotMasivaDetKafkaRes.class));
 				commitKafka.acknowledge();
 				log.info("Petición kafka sincrónico enviada: {}, Transacción: {}", kafkaRequest.getOp(), idTransKafka);
 				return (KafkaResponse<T>) response;
