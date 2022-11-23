@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ec.telconet.microservicio.dependencia.util.general.Formato;
+import ec.telconet.microservicio.dependencia.util.response.GenericBasicResponse;
 import ec.telconet.microservicio.dependencia.util.response.GenericListResponse;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.AgregarPersonaListaReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.AgregarPersonaListaResDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.BusquedaPersonaListaReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.BusquedaPersonaListaResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoClienteNotMasivaDetReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoClienteNotMasivaDetResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoUsuarioReqDTO;
@@ -94,4 +99,21 @@ public class ConsultasController {
 		response.setData(consultasService.listarClienteNotMasivaDet(request));
 		return response;
 	}
+	//agregarPersonaLista
+	@PostMapping(path = "gestionarPersonaEnLista", consumes = "application/json")
+	public GenericBasicResponse<AgregarPersonaListaResDTO> agregarPersona(@RequestBody AgregarPersonaListaReqDTO request) throws Exception {
+        log.info("Petición recibida: agregarPersona");
+        GenericBasicResponse<AgregarPersonaListaResDTO> response = new GenericBasicResponse<AgregarPersonaListaResDTO>();
+        response.setData(consultasService.agregarPersonaLista(request));
+        return response;
+    }
+	
+	//busquedaLista
+	@PostMapping(path = "busquedaLista", consumes = "application/json")
+    public GenericListResponse<BusquedaPersonaListaResDTO> busquedaLista(@RequestBody BusquedaPersonaListaReqDTO request) throws Exception {
+        log.info("Petición recibida: agregarPersona");
+        GenericListResponse<BusquedaPersonaListaResDTO> response = new GenericListResponse<BusquedaPersonaListaResDTO>();
+        response.setData(consultasService.buscarPersonaLista(request));
+        return response;
+    }
 }

@@ -6,10 +6,22 @@ package ec.telconet.persona.utils;
  * @author Marlon Plúas <mailto:mpluas@telconet.ec>
  * @version 1.0
  * @since 15/10/2020
+ *
+ * @author Marlon Plúas <mailto:mpluas@telconet.ec>
+ * @version 1.1 - 17/11/2022 - Se requiere adicionar el tipo de identificación y el tipo tributario.
  */
 public abstract class PersonaConstants {
 	private PersonaConstants() {
 	}
+
+	public static enum TIPO_IDENTIFICACION {RUC,
+        CED,
+        PAS
+    };
+
+    public static enum TIPO_TRIBUTARIO {NAT,
+        JUR
+    };
 
 	public static final String MSG_ERROR_PAIS_NO_EXISTE = "No se encuentra el país";
 	public static final String MSG_ERROR_PAIS_NO_VALIDO = "El país {{pais}} no se admite para la validación de forma de contactos";
@@ -39,5 +51,11 @@ public abstract class PersonaConstants {
 
 	public static final String STATUS_ERROR = "ERROR";
 	public static final String MSG_VALIDACION_CONTACTO = "No se pudo crear el prospecto corregir las siguientes validaciones de contacto: ";
+
+	public static final String ROL_LISTA_NEGRA = "negra";
+    public static final String ROL_LISTA_BLANCA = "blanca";
+    public static final String DESCRIPCION_TIPO_ROL = "listaPersona";
+    
+    public static final String ESTADO_ACTIVO = "Activo";
 
 }
