@@ -1,4 +1,4 @@
-FROM registry.gitlab.telconet.ec/docker/images/microservicio:1.8
+FROM registry.gitlab.telconet.ec/docker/images/microservicio:11-v2
 ARG ARCHIVO_JAR
 ARG PUERTO_INTERNO_EXP
 COPY --chown=sistemas:sistemas target/$ARCHIVO_JAR app.jar

@@ -5,7 +5,6 @@ import java.util.*;
 
 import ec.telconet.microservicio.dependencia.util.kafka.KafkaProperties;
 import ec.telconet.microservicio.dependencia.util.kafka.utils.KafkaResponseDeserializer;
-import io.opentracing.contrib.kafka.TracingConsumerInterceptor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -82,7 +81,6 @@ public class ProducerSynchroConfig {
 		configMap.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaProperties.getTopicGroup());
 		configMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 		configMap.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, maxByteRequestKafka);
-		configMap.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, TracingConsumerInterceptor.class.getName());
 		configMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaResponseDeserializer.class);
 		configMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KafkaResponseDeserializer.class);
 		return new DefaultKafkaConsumerFactory<>(configMap);

@@ -23,14 +23,10 @@ spring.datasource.hikari.max-lifetime=600000
 #Log
 logging.config: log4j2.xml
 
-jaeger.tracer.host=
-jaeger.tracer.port=6831
-jaeger.tracer.logspan=false
-jaeger.tracer.nametracer=ms-core-com-persona
-
 kafka.ms.topic-sync-sufijo=
 kafka.ms.topic-asyn-sufijo=
 
+management.endpoint.health.notification.mailUrl=http://localhost/mail
 management.endpoint.health.notification.mailTo=jdvinueza@telconet.ec;kjimenez@telconet.ec
 management.endpoint.health.notification.mailFrom=sistemas-qa@telconet.ec
 management.endpoint.health.notification.memoryPercentMax=95
