@@ -27,6 +27,8 @@ public abstract class PersonaConstants {
 	public static final String MSG_ERROR_PAIS_NO_VALIDO = "El país {{pais}} no se admite para la validación de forma de contactos";
 
 	public static final String MSG_ERROR_CONTACTO_NO_EXISTE = "No se encuentra la forma de contacto";
+	public static final String MSG_ERROR_CONTACTO_NO_FOUND = "No se requiere al menos una forma de contacto para realizar la validación";
+
 
 	public static final String[] LIST_VALIDA_PAISES_NOMBRE = { "ECUADOR" };
 	public static final String[] LIST_VALIDA_FORMATO_TELEFONO = { "TELEFONO FIJO", "FAX", "TELEFONO TRASLADO" };

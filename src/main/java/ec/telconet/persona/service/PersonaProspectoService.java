@@ -151,7 +151,7 @@ public class PersonaProspectoService {
 	            response.getPersona().setTipoIdentificacion(request.getTipoIdentificacion());
 	    	
 	    }else {
-    		throw new GenericException("No se encontro persona para la identificación "+ request.getIdentificacion());
+    		throw new GenericException("No se encontró información de la persona para la identificación "+ request.getIdentificacion());
 
 	    }	  	    
 	  	return response;
@@ -201,7 +201,7 @@ public class PersonaProspectoService {
 		nuevo.setOpcion("CONSULTA_DATOS_PERSONA");
 		nuevo.setComandoConfiguracion("NO");
 		nuevo.setEjecutaComando("NO");
-		nuevo.setActualiza_datos("NO");
+		nuevo.setActualizaDatos("NO");
 		nuevo.setEmpresa(request.getPrefijoEmPresa());
 		nuevo.setUsrCreacion(request.getUser());
 		DatosEquifax datos = new DatosEquifax();
@@ -219,6 +219,9 @@ public class PersonaProspectoService {
 		 Gson gson = new Gson();		
 		validators.validarConsultaEquifaxRecomendacion(request);
 		PersonaEquifaxRecomendacionResDto response;
+		
+		log.info(gson.toJson(request));
+
 		ResponseEntity<Object> resWsEquiFax = consumoWebService.genericObjectRest(wsEquifaxProcesar, MediaType.APPLICATION_JSON, HttpMethod.POST, request,
 	                null,
 	                false);	
@@ -249,6 +252,6 @@ public class PersonaProspectoService {
 	 		 
 		return  response;
 	}
-	
-	
+
+
 }

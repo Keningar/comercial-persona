@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ec.telconet.microservicio.core.comercial.kafka.request.ValidarFormaContactoKafkaReq;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.CrearPreClienteReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.CrearPreClienteResDTO;
@@ -72,12 +73,20 @@ public class PreClienteService {
 	 * @since 01/07/2022
 	 */
 
-	public List<String> validarFormaContacto(List<FormaContactoReqDTO> formaContacto, int idPais)
-			throws Exception {
+	public List<String> validarFormaContacto(ValidarFormaContactoKafkaReq request) throws Exception {
 		Boolean exteCorreo = false;
+		
+		List<FormaContactoReqDTO> contactos = Formato.mapearListObjDeserializado(request.getFormasContacto(),
+				FormaContactoReqDTO.class);
+
+		if(contactos.isEmpty()) {
+			throw new GenericException(PersonaConstants.MSG_ERROR_CONTACTO_NO_FOUND);
+
+		}
+		
 
 		List<String> listaValidaciones = new ArrayList<String>();
-		Optional<AdmiPais> optionalPais = admiPaisRepository.findById((long) idPais);
+		Optional<AdmiPais> optionalPais = admiPaisRepository.findById(request.getIdPais());
 		if (!optionalPais.isPresent()) {
 			throw new GenericException(PersonaConstants.MSG_ERROR_PAIS_NO_EXISTE);
 		}
@@ -90,7 +99,8 @@ public class PreClienteService {
 					PersonaConstants.MSG_ERROR_PAIS_NO_VALIDO.replace("{{pais}}", pais.getNombrePais()));
 		}
 
-		for (FormaContactoReqDTO itemformaContacto : formaContacto) {
+		
+		for (FormaContactoReqDTO itemformaContacto : contactos) {
 
 			Optional<AdmiFormaContacto> opcionAdminFormaContacto = admiFormaContactoRepository
 					.findById((long) itemformaContacto.getFormaContactoId());
@@ -104,25 +114,20 @@ public class PreClienteService {
 			String contactoValor = itemformaContacto.getValor();
 			String mensajeValidacion = "";
 
-			mensajeValidacion = PersonaUtils.validadorContacto(
-					contactoNombre, contactoValor,
-					PersonaConstants.LIST_VALIDA_FORMATO_TELEFONO,
-					PersonaConstants.EXP_REG_TELEFONO,
+			mensajeValidacion = PersonaUtils.validadorContacto(contactoNombre, contactoValor,
+					PersonaConstants.LIST_VALIDA_FORMATO_TELEFONO, PersonaConstants.EXP_REG_TELEFONO,
 					PersonaConstants.MSG_VALIDACION_TELEFONO);
 
 			if (mensajeValidacion == "") {
-				mensajeValidacion = PersonaUtils.validadorContacto(
-						contactoNombre, contactoValor,
+				mensajeValidacion = PersonaUtils.validadorContacto(contactoNombre, contactoValor,
 						PersonaConstants.LIST_VALIDA_FORMATO_TELEFONO_INTERNACIONAL,
 						PersonaConstants.EXP_REG_TELEFONO_INTERNACIONAL,
 						PersonaConstants.MSG_VALIDACION_TELEFONO_INTERNACIONAL);
 			}
 
 			if (mensajeValidacion == "") {
-				mensajeValidacion = PersonaUtils.validadorContacto(
-						contactoNombre, contactoValor,
-						PersonaConstants.LIST_VALIDA_FORMATO_TELEFONO_MOVIL,
-						PersonaConstants.EXP_REG_TELEFONO_MOVIL,
+				mensajeValidacion = PersonaUtils.validadorContacto(contactoNombre, contactoValor,
+						PersonaConstants.LIST_VALIDA_FORMATO_TELEFONO_MOVIL, PersonaConstants.EXP_REG_TELEFONO_MOVIL,
 						PersonaConstants.MSG_VALIDACION_TELEFONO_MOVIL);
 			}
 
@@ -140,8 +145,8 @@ public class PreClienteService {
 							String dominio = parts.length != 0 ? parts[parts.length - 1] : "";
 							Boolean validoDominio = personaUtils.verificarMailDNS(dominio);
 							if (!validoDominio) {
-								mensajeValidacion = PersonaConstants.MSG_VALIDACION_DOMINIO
-										.replace("{{valor}}", contactoValor);
+								mensajeValidacion = PersonaConstants.MSG_VALIDACION_DOMINIO.replace("{{valor}}",
+										contactoValor);
 							} else {
 								exteCorreo = true;
 							}
@@ -158,11 +163,11 @@ public class PreClienteService {
 			}
 
 		}
-		if (!exteCorreo) {
+		
+		if (!exteCorreo && request.getRequiereCorreo()) {
 			listaValidaciones.add(PersonaConstants.MSG_VALIDACION_CORREO_REQ);
 		}
 
 		return listaValidaciones;
 	}
-
 }

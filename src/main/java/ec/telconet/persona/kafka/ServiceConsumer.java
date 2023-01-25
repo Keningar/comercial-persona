@@ -26,6 +26,7 @@ import ec.telconet.microservicio.core.comercial.kafka.request.InfoUsuarioKafkaRe
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaEmpresaRolCaracKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaEmpresaRolKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaKafkaReq;
+import ec.telconet.microservicio.core.comercial.kafka.request.ValidarFormaContactoKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.response.InfoClienteNotMasivaDetKafkaRes;
 import ec.telconet.microservicio.core.comercial.kafka.response.PersonaEmpresaRolKafkaRes;
 import ec.telconet.microservicio.core.comercial.kafka.response.PersonaKafkaRes;
@@ -358,9 +359,12 @@ public class ServiceConsumer {
                 log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
                 return (KafkaResponse<T>) response;
             } else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_VALIDAR_FORMA_CONTACTO)) {
-                List<FormaContactoReqDTO>  requestService = Formato.mapearListObjDeserializado(kafkaRequest.getData(), FormaContactoReqDTO .class);
+                   	
+            	ValidarFormaContactoKafkaReq requestService = Formato.mapearObjDeserializado(kafkaRequest.getData(), ValidarFormaContactoKafkaReq.class);  
+            	
+            	
                 KafkaResponse<String> response = new KafkaResponse<String>();
-                response.setData(preClienteService.validarFormaContacto(requestService, 1));
+                response.setData(preClienteService.validarFormaContacto(requestService));
                 commitKafka.acknowledge();
                 log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
                 return (KafkaResponse<T>) response;
