@@ -217,11 +217,12 @@ public class PersonaProspectoService {
 	
 	public PersonaEquifaxRecomendacionResDto personaRecomendacion(EquifaxReqDto request)throws GenericException {	
 		 Gson gson = new Gson();		
+		request.setComandoConfiguracion("NO");
+		request.setEjecutaComando("NO");
+		request.setActualizaDatos("NO");
 		validators.validarConsultaEquifaxRecomendacion(request);
 		PersonaEquifaxRecomendacionResDto response;
-		
 		log.info(gson.toJson(request));
-
 		ResponseEntity<Object> resWsEquiFax = consumoWebService.genericObjectRest(wsEquifaxProcesar, MediaType.APPLICATION_JSON, HttpMethod.POST, request,
 	                null,
 	                false);	
@@ -237,8 +238,12 @@ public class PersonaProspectoService {
 	
 	
 	public TarjetasEquifaxRecomendacionResDto tarjetaRecomendacion(EquifaxReqDto request)throws GenericException {	
-		 Gson gson = new Gson();
+		Gson gson = new Gson();
+		request.setComandoConfiguracion("NO");
+		request.setEjecutaComando("NO");
+		request.setActualizaDatos("NO");
 		validators.validarConsultaEquifaxRecomendacion(request);
+		log.info(gson.toJson(request));
 		TarjetasEquifaxRecomendacionResDto response;
 		 ResponseEntity<Object> resWsEquiFax = consumoWebService.genericObjectRest(wsEquifaxProcesar, MediaType.APPLICATION_JSON, HttpMethod.POST, request,
 	                null,
