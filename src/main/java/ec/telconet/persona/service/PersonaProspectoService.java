@@ -1,7 +1,10 @@
 package ec.telconet.persona.service;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaReferidoService;
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaService;
@@ -44,7 +49,6 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.SeguPerfilP
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.TarjetasEquifaxRecomendacionResDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
-import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpFormaPago;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaReferido;
 import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoEmpresaRolRepository;
@@ -219,11 +223,15 @@ public class PersonaProspectoService {
 		 Gson gson = new Gson();		
 		request.setComandoConfiguracion("NO");
 		request.setEjecutaComando("NO");
+		request.setIpCreacion(personaUtils.getClientIp());
 		request.setActualizaDatos("NO");
 		validators.validarConsultaEquifaxRecomendacion(request);
 		PersonaEquifaxRecomendacionResDto response;
-		log.info(gson.toJson(request));
-		ResponseEntity<Object> resWsEquiFax = consumoWebService.genericObjectRest(wsEquifaxProcesar, MediaType.APPLICATION_JSON, HttpMethod.POST, request,
+		Map<String, Object> requestPost = new Gson().fromJson(
+			    gson.toJson(request), new TypeToken<HashMap<String, Object>>() {}.getType()
+			);
+		log.info(gson.toJson(requestPost));
+		ResponseEntity<Object> resWsEquiFax = consumoWebService.genericObjectRest(wsEquifaxProcesar, MediaType.APPLICATION_JSON, HttpMethod.POST, requestPost,
 	                null,
 	                false);	
 		String jsonResponse = gson.toJson( resWsEquiFax.getBody(), LinkedHashMap.class);
@@ -242,10 +250,16 @@ public class PersonaProspectoService {
 		request.setComandoConfiguracion("NO");
 		request.setEjecutaComando("NO");
 		request.setActualizaDatos("NO");
+		request.setIpCreacion(personaUtils.getClientIp());
 		validators.validarConsultaEquifaxRecomendacion(request);
-		log.info(gson.toJson(request));
+
+		Map<String, Object> requestPost = new Gson().fromJson(
+			    gson.toJson(request), new TypeToken<HashMap<String, Object>>() {}.getType()
+			);
+		log.info(gson.toJson(requestPost));
+
 		TarjetasEquifaxRecomendacionResDto response;
-		 ResponseEntity<Object> resWsEquiFax = consumoWebService.genericObjectRest(wsEquifaxProcesar, MediaType.APPLICATION_JSON, HttpMethod.POST, request,
+		 ResponseEntity<Object> resWsEquiFax = consumoWebService.genericObjectRest(wsEquifaxProcesar, MediaType.APPLICATION_JSON, HttpMethod.POST, requestPost,
 	                null,
 	                false);	
 		String jsonResponse = gson.toJson( resWsEquiFax.getBody(), LinkedHashMap.class);
