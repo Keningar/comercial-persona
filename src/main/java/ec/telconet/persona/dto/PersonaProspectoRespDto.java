@@ -6,8 +6,8 @@ import java.util.List;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.DataPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoPersonaEmpFormaPagoDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
-import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpFormaPago;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
+import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaFormaContacto;
 import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiRol;
 import lombok.Data;
 
@@ -20,5 +20,5 @@ public class PersonaProspectoRespDto {
 	InfoPersona personaReferido;
 	InfoPersonaEmpFormaPagoDTO formaPago;
 	Boolean isRecomendado=false;
-	
+	List<InfoPersonaFormaContacto>formasContacto=new ArrayList<>();
 }

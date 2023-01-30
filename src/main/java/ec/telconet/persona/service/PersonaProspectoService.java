@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaReferidoService;
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaService;
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.impl.CmkgPersonaConsultaImpl;
+import ec.telconet.microservicios.dependencias.esquema.comercial.service.impl.InfoPersonaFormaContactoImpl;
 import ec.telconet.microservicios.dependencias.esquema.comercial.utils.ComercialValidators;
 import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiBanco;
 import ec.telconet.microservicios.dependencias.esquema.general.entity.AdmiBancoTipoCuenta;
@@ -35,6 +36,7 @@ import ec.telconet.microservicios.dependencias.esquema.general.repository.AdmiRo
 import ec.telconet.microservicios.dependencias.esquema.general.repository.AdmiTipoCuentaRepository;
 import ec.telconet.persona.dto.PersonaProspectoRespDto;
 import ec.telconet.persona.utils.PersonaUtils;
+import ec.telconet.microservicio.dependencia.util.enumerado.StatusHandler;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
 import ec.telconet.microservicio.dependencia.util.general.ConsumoWebService;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.DataPersonaDTO;
@@ -50,6 +52,7 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.TarjetasEqu
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
+import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaFormaContacto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaReferido;
 import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoEmpresaRolRepository;
 import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoPersonaRepository;
@@ -106,17 +109,29 @@ public class PersonaProspectoService {
 	@Autowired
 	AdmiTipoCuentaRepository admiTipoCuentaRepository;
 	
-
+	@Autowired
+	InfoPersonaFormaContactoImpl infoPersonaFormaContactoImpl;
 	
 	public PersonaProspectoRespDto personaProspecto(@RequestBody PersonaProspectoReqDto request) throws Exception {	    
 		validators.validarConsultaPersonaProspecto(request);
 		PersonaProspectoRespDto response=new PersonaProspectoRespDto();
 	    InfoPersona persona=new InfoPersona();
-	    persona.setIdentificacionCliente(request.getIdentificacion());    
+	    persona.setIdentificacionCliente(request.getIdentificacion()); 
+	    if(request.getTipoIdentificacion()!=null && !request.getTipoIdentificacion().isEmpty()) {
+	    	persona.setTipoIdentificacion(request.getTipoIdentificacion());	
+	    }
+	    
 	    List<InfoPersona> personas= infoPersonaService.listaPor(persona);
 	    ///Si encuentro la persona empiezo a buscar los otros datos
 	    if(!personas.isEmpty()) {	      
 	  	    response.setPersona(new DataPersonaDTO(personas.get(0)));	  	    
+	  	    InfoPersonaFormaContacto contactoRequest=new InfoPersonaFormaContacto();
+	        contactoRequest.setEstado(StatusHandler.Activo.toString());
+	        contactoRequest.setPersonaId(personas.get(0).getIdPersona());
+	        
+	        
+	        response.setFormasContacto(infoPersonaFormaContactoImpl.listaPor(contactoRequest));
+	  	    
 	  	    PersonaEmpresaRolPorEmpresaActivoReqDTO requestConsulta = new PersonaEmpresaRolPorEmpresaActivoReqDTO();
 	  	    requestConsulta.setIdentificacion(response.getPersona().getIdentificacionCliente());	  	   
 	  	    ///Obtengo el referido de la persona
@@ -129,16 +144,18 @@ public class PersonaProspectoService {
 	  	    requestConsulta.setEmpresaCod(request.getEmpresaCod());    
 	  	    List<InfoPersonaEmpresaRol>empresaRoles= cmkgPersonaConsultaImpl.personaEmpresaRolPorEmpresaActivo(requestConsulta);
 	  	    response.setEmpresaRoles(empresaRoles);
-	  	    for(int i=0; i<empresaRoles.size(); i++)
-	      	{	
-	      		Optional<InfoEmpresaRol> empresaRol=	infoEmpresaRolRepository.findById(empresaRoles.get(i).getEmpresaRolId());
-	      		if(empresaRol.isPresent()) {
-	      			
-	      		    Optional<AdmiRol> admiRoles=	admiRolRepository.findById(empresaRol.get().getRolId());
-	          		response.getAdmiRoles().add(admiRoles.get());	
-
-	      		}  	
-	      	}	  	    
+		  	  for(InfoPersonaEmpresaRol itemEmpresaRol: response.getEmpresaRoles()) 
+	          {
+	            Optional<InfoEmpresaRol> empresaRolOption=  infoEmpresaRolRepository.findById(itemEmpresaRol.getEmpresaRolId());
+	            if(empresaRolOption.isPresent()) 
+	            {
+	                InfoEmpresaRol empresaRol=empresaRolOption.get();
+	                Optional<AdmiRol> admiRoles=  admiRolRepository.findById(empresaRol.getRolId());
+	                response.getAdmiRoles().add(admiRoles.get());  
+		            itemEmpresaRol.setEmpresaRol(empresaRol);
+	            }    
+	            
+	          }  	    
 	  	    ///Obtengo todas ls formas de pago 
 	  		List<InfoPersonaEmpFormaPagoDTO> formasPago= formaPagoProspecto(requestConsulta);
 	  		if(!formasPago.isEmpty()) 
@@ -154,9 +171,9 @@ public class PersonaProspectoService {
 	            response.setPersona(responseEquifax.convertDataPersonaDTO());
 	            response.getPersona().setTipoIdentificacion(request.getTipoIdentificacion());
 	    	
-	    }else {
-    		throw new GenericException("No se encontró información de la persona para la identificación "+ request.getIdentificacion());
-
+	    }else 
+		{	    	   			
+    		throw new GenericException("La identificación ingresada no pertenece a un cliente");
 	    }	  	    
 	  	return response;
 	  }

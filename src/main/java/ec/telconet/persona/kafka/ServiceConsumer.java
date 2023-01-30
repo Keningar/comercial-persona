@@ -26,10 +26,14 @@ import ec.telconet.microservicio.core.comercial.kafka.request.InfoUsuarioKafkaRe
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaEmpresaRolCaracKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaEmpresaRolKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.PersonaKafkaReq;
+import ec.telconet.microservicio.core.comercial.kafka.request.PersonaProspectoKafkaReq;
+import ec.telconet.microservicio.core.comercial.kafka.request.PersonaPuntoServiciosKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.request.ValidarFormaContactoKafkaReq;
 import ec.telconet.microservicio.core.comercial.kafka.response.InfoClienteNotMasivaDetKafkaRes;
 import ec.telconet.microservicio.core.comercial.kafka.response.PersonaEmpresaRolKafkaRes;
 import ec.telconet.microservicio.core.comercial.kafka.response.PersonaKafkaRes;
+import ec.telconet.microservicio.core.comercial.kafka.response.PersonaProspectoKafkaRes;
+import ec.telconet.microservicio.core.comercial.kafka.response.PuntoServicioKafkaRes;
 import ec.telconet.microservicio.dependencia.util.exception.GenericException;
 import ec.telconet.microservicio.dependencia.util.general.Formato;
 import ec.telconet.microservicio.dependencia.util.kafka.KafkaProperties;
@@ -53,18 +57,21 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorD
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoReqDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.SeguPerfilPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.AdmiCaracteristica;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRolCarac;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoServicioHistorial;
+import ec.telconet.persona.dto.PersonaProspectoRespDto;
 import ec.telconet.persona.service.ConsultasService;
 import ec.telconet.persona.service.PersonaEmpresaRolCaracService;
 import ec.telconet.persona.service.PersonaEmpresaRolService;
 import ec.telconet.persona.service.PersonaProspectoService;
 import ec.telconet.persona.service.PersonaService;
 import ec.telconet.persona.service.PreClienteService;
+import ec.telconet.persona.service.PersonaServiciosService;
 import ec.telconet.persona.service.ServicioHistorialService;
 
 /**
@@ -107,6 +114,9 @@ public class ServiceConsumer {
 	@Autowired
 	PersonaEmpresaRolCaracService personaEmpresaRolCaracService;
 
+	@Autowired
+    PersonaServiciosService personaServicioService;
+	
 	@Autowired
 	KafkaProperties kafkaProperties;
 
@@ -361,14 +371,35 @@ public class ServiceConsumer {
             } else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_VALIDAR_FORMA_CONTACTO)) {
                    	
             	ValidarFormaContactoKafkaReq requestService = Formato.mapearObjDeserializado(kafkaRequest.getData(), ValidarFormaContactoKafkaReq.class);  
-            	
-            	
+                     	
                 KafkaResponse<String> response = new KafkaResponse<String>();
                 response.setData(preClienteService.validarFormaContacto(requestService));
                 commitKafka.acknowledge();
                 log.info("Petición kafka sincrónico enviada: " + kafkaRequest.getOp() + ", Transacción: " + idTransKafka);
                 return (KafkaResponse<T>) response;
-            } else {
+            } 
+			else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_PROSPECTO)) 
+			{					
+				PersonaProspectoKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaProspectoKafkaReq.class);
+				PersonaProspectoReqDto requestService = Formato.mapearObjDeserializado(data, PersonaProspectoReqDto.class);
+				PersonaProspectoRespDto responseData=personaProspectoService.personaProspecto(requestService);			
+				KafkaResponse<PersonaProspectoKafkaRes> response = new KafkaResponse<>();
+				response.setData(Collections.singletonList(Formato.mapearObjDeserializado(responseData, PersonaProspectoKafkaRes.class)));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: {}, Transacción: {}", kafkaRequest.getOp(), idTransKafka);
+				return (KafkaResponse<T>) response;							
+			}
+			
+			 else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_SERVICIOS)) 
+			{					
+				    PersonaPuntoServiciosKafkaReq  requestService = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaPuntoServiciosKafkaReq .class);															
+					KafkaResponse<PuntoServicioKafkaRes> response = new KafkaResponse<>();
+					response.setData(personaServicioService.puntoServicios(requestService));
+					commitKafka.acknowledge();
+					log.info("Petición kafka sincrónico enviada: {}, Transacción: {}", kafkaRequest.getOp(), idTransKafka);
+					return (KafkaResponse<T>) response;							
+			}	
+			else {
 				kafkaResponse.setCode(500);
 				kafkaResponse.setStatus("ERROR");
 				kafkaResponse.setMessage(
