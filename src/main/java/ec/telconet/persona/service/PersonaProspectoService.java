@@ -49,11 +49,13 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaEqui
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoReqDto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.SeguPerfilPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.TarjetasEquifaxRecomendacionResDto;
+import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoEmpresaGrupo;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaFormaContacto;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaReferido;
+import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoEmpresaGrupoRepository;
 import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoEmpresaRolRepository;
 import ec.telconet.microservicios.dependencias.esquema.comercial.repository.InfoPersonaRepository;
 
@@ -111,6 +113,9 @@ public class PersonaProspectoService {
 	
 	@Autowired
 	InfoPersonaFormaContactoImpl infoPersonaFormaContactoImpl;
+	
+	@Autowired 
+    InfoEmpresaGrupoRepository infoEmpresaGrupoRepository;
 	
 	public PersonaProspectoRespDto personaProspecto(@RequestBody PersonaProspectoReqDto request) throws Exception {	    
 		validators.validarConsultaPersonaProspecto(request);
@@ -216,14 +221,17 @@ public class PersonaProspectoService {
 	
 	
 	
-	public EquifaxReqDto convertRequestPersonaRecomendacion(PersonaProspectoReqDto request)throws Exception {       
+	public EquifaxReqDto convertRequestPersonaRecomendacion(PersonaProspectoReqDto request)throws Exception {      
+		
+		Optional<InfoEmpresaGrupo> grupoOptional = infoEmpresaGrupoRepository.findById(Long.parseLong(request.getEmpresaCod())); 
+        String prefijoEmpresa= grupoOptional.get().getPrefijo(); 
 		EquifaxReqDto nuevo=new  EquifaxReqDto();
 		nuevo.setIpCreacion(personaUtils.getClientIp());
 		nuevo.setOpcion("CONSULTA_DATOS_PERSONA");
 		nuevo.setComandoConfiguracion("NO");
 		nuevo.setEjecutaComando("NO");
 		nuevo.setActualizaDatos("NO");
-		nuevo.setEmpresa(request.getPrefijoEmPresa());
+		nuevo.setEmpresa(prefijoEmpresa);
 		nuevo.setUsrCreacion(request.getUser());
 		DatosEquifax datos = new DatosEquifax();
 		datos.setIdentificacion(request.getIdentificacion());
