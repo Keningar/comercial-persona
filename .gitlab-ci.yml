@@ -19,6 +19,7 @@ stages:
   - BUILD
   - IMAGES
   - TEST DEPLOY
+  - TEST DYNAMIC SCAN
   - DONE DEPLOY
   - DEPLOY
   - MERGE
@@ -35,6 +36,7 @@ include:
   - template: sis-docker-build-prod-microservicio-v2.gitlab-ci.yml
   - template: sis-docker-create-image-test-microservicio.gitlab-ci.yml
   - template: sis-docker-create-image-prod-microservicio.gitlab-ci.yml
+  - template: sis-docker-scan-vulnerabilities-stackhawk.gitlab-ci.yml
   - template: sis-docker-copy-redis-done.gitlab-ci.yml
   - template: sis-docker-deploy-test-microservicio-v1.gitlab-ci.yml
   - template: sis-docker-deploy-prod-microservicio-v1.gitlab-ci.yml
