@@ -153,4 +153,50 @@ public class DbOracleConfig {
 			return new JpaTransactionManager(GeneralEMFactory);
 		}
 		// FIN CONFIGURACIÓN GENERAL
+		
+
+		   // INICIO CONFIGURACIÓN DOCUMENTO
+		  	@Bean(name = "dsDocumento")
+		  	public DataSource dsDocumento(@Qualifier("dsDocumentoProperties") HikariConfig dataSourceConfig) {
+		  		return new HikariDataSource(dataSourceConfig);
+		  	}
+
+		  	@Bean(name = "dsDocumentoProperties")
+		  	public HikariConfig dsDocumentoConfig() throws Exception {
+		  		ArrayList<String> listaConexiones = new ArrayList<>();
+		  		listaConexiones.add("documento");
+		  		HikariConfig dataSourceConfig = configdb.getConfig(listaConexiones, hostParameters, rutaParametersLocal);
+		  		dataSourceConfig.setPoolName("dsDocumento");
+		  		dataSourceConfig.setConnectionTimeout(connectionTimeout);
+		  		dataSourceConfig.setIdleTimeout(idleTimeout);
+		  		dataSourceConfig.setMaximumPoolSize(maxPoolSize);
+		  		dataSourceConfig.setMinimumIdle(minPoolSize);
+		  		dataSourceConfig.setMaxLifetime(maxLifetime);
+		  		dataSourceConfig.setValidationTimeout(10000);
+		  		dataSourceConfig.setConnectionTestQuery("SELECT 1 FROM DUAL");
+		  		dataSourceConfig.setConnectionInitSql("SELECT 1 FROM DUAL");
+		  		dataSourceConfig.addDataSourceProperty("oracle.jdbc.timezoneAsRegion", "false");
+		  		return dataSourceConfig;
+		  	}
+
+		  	@Bean(name = "jdbcDocumento")
+		  	@Autowired
+		  	public JdbcTemplate jdbcDocumentoTemplate(@Qualifier("dsDocumento") DataSource dsDocumento) {
+		  		return new JdbcTemplate(dsDocumento);
+		  	}
+
+		  	@Bean(name = "DocumentoEMFactory")
+		  	public LocalContainerEntityManagerFactoryBean entityManagerFactoryDocumento(EntityManagerFactoryBuilder builder,
+		  			@Qualifier("dsDocumento") DataSource dsDocumento) {
+		  		return builder.dataSource(dsDocumento)
+		  				.packages("ec.telconet.microservicios.dependencias.esquema.documento.entity")
+		  				.persistenceUnit("dbDocumento").build();
+		  	}
+
+		  	@Bean(name = "DocumentoTM")
+		  	public PlatformTransactionManager transactionManagerDocumento(
+		  			@Qualifier("DocumentoEMFactory") EntityManagerFactory DocumentoEMFactory) {
+		  		return new JpaTransactionManager(DocumentoEMFactory);
+		  	}
+		  	// FIN CONFIGURACIÓN DOCUMENTO
 }

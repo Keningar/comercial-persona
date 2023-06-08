@@ -94,7 +94,6 @@ public class ConsultasController {
 	@PostMapping(path = "listaClienteNotMasivaDet", consumes = "application/json")
 	public GenericListResponse<InfoClienteNotMasivaDetResDTO> listaClienteNotMasivaDet(@RequestBody InfoClienteNotMasivaDetReqDTO request)
 	 throws Exception {
-		log.info("Petición recibida: listaClienteNotMasivaDet");
 		GenericListResponse<InfoClienteNotMasivaDetResDTO> response = new GenericListResponse<InfoClienteNotMasivaDetResDTO>();
 		response.setData(consultasService.listarClienteNotMasivaDet(request));
 		return response;
@@ -102,7 +101,6 @@ public class ConsultasController {
 	//agregarPersonaLista
 	@PostMapping(path = "gestionarPersonaEnLista", consumes = "application/json")
 	public GenericBasicResponse<AgregarPersonaListaResDTO> agregarPersona(@RequestBody AgregarPersonaListaReqDTO request) throws Exception {
-        log.info("Petición recibida: agregarPersona");
         GenericBasicResponse<AgregarPersonaListaResDTO> response = new GenericBasicResponse<AgregarPersonaListaResDTO>();
         response.setData(consultasService.agregarPersonaLista(request));
         return response;
@@ -111,7 +109,6 @@ public class ConsultasController {
 	//busquedaLista
 	@PostMapping(path = "busquedaLista", consumes = "application/json")
     public GenericListResponse<BusquedaPersonaListaResDTO> busquedaLista(@RequestBody BusquedaPersonaListaReqDTO request) throws Exception {
-        log.info("Petición recibida: agregarPersona");
         GenericListResponse<BusquedaPersonaListaResDTO> response = new GenericListResponse<BusquedaPersonaListaResDTO>();
         response.setData(consultasService.buscarPersonaLista(request));
         return response;

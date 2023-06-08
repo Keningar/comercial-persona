@@ -101,6 +101,9 @@ public class PersonaProspectoService {
 	@Value("${ms.equifax.procesar}")
     String wsEquifaxProcesar;
 	
+	@Value("${ms.equifax.codEmpresa}")
+	String codEmpresaEquifax;
+	
 	@Autowired
 	AdmiBancoTipoCuentaRepository admiBancoTipoCuentaRepository;
 	
@@ -244,12 +247,14 @@ public class PersonaProspectoService {
 	
 	
 	
-	public PersonaEquifaxRecomendacionResDto personaRecomendacion(EquifaxReqDto request)throws GenericException {	
+	public PersonaEquifaxRecomendacionResDto personaRecomendacion(EquifaxReqDto request)throws GenericException {
+		log.info("Dentro de PersonaEquifaxRecomendacionResDto");
 		 Gson gson = new Gson();		
 		request.setComandoConfiguracion("NO");
 		request.setEjecutaComando("NO");
 		request.setIpCreacion(personaUtils.getClientIp());
 		request.setActualizaDatos("NO");
+		request.setEmpresa(codEmpresaEquifax);
 		validators.validarConsultaEquifaxRecomendacion(request);
 		PersonaEquifaxRecomendacionResDto response;
 		Map<String, Object> requestPost = new Gson().fromJson(
@@ -271,11 +276,13 @@ public class PersonaProspectoService {
 	
 	
 	public TarjetasEquifaxRecomendacionResDto tarjetaRecomendacion(EquifaxReqDto request)throws GenericException {	
+		log.info("Dentro de TarjetasEquifaxRecomendacionResDto");
 		Gson gson = new Gson();
 		request.setComandoConfiguracion("NO");
 		request.setEjecutaComando("NO");
 		request.setActualizaDatos("NO");
 		request.setIpCreacion(personaUtils.getClientIp());
+		request.setEmpresa(codEmpresaEquifax);
 		validators.validarConsultaEquifaxRecomendacion(request);
 
 		Map<String, Object> requestPost = new Gson().fromJson(
