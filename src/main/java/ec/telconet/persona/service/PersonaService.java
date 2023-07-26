@@ -13,6 +13,8 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorD
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaResponsableReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaResponsableResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.service.InfoPersonaService;
 
@@ -105,6 +107,22 @@ public class PersonaService {
 	@Transactional(readOnly = true)
 	public List<InfoPersona> listaPersonaPorRol(PersonaPorRolReqDTO request) throws Exception {
 		return infoPersonaService.personaPorRol(request);
+	}
+
+	/**
+	 * Método que retorna la lista de personas responsables de tablets
+	 * 
+	 * @author Kenth Encalada <mailto:kencalada@telconet.ec>
+	 * @version 1.0
+	 * @since 25/05/2023
+	 * 
+	 * @param request {@linkplain PersonaResponsableReqDTO}
+	 * @return List<PersonaResponsableResDTO>
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<PersonaResponsableResDTO> listaPersonaResponsable(PersonaResponsableReqDTO request) throws Exception {
+		return infoPersonaService.personaResponsable(request);
 	}
 	
 	/**

@@ -22,6 +22,7 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorD
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorEmpresaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaResponsableReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersonaEmpresaRol;
 import ec.telconet.persona.service.PersonaService;
@@ -141,6 +142,26 @@ public class PersonaController {
 		log.info("Petición recibida: listaPersonaPorRol");
 		GenericListResponse<Object> response = new GenericListResponse<>();
 		Object listaPersona = personaService.listaPersonaPorRol(Formato.mapearObjDeserializado(request, PersonaPorRolReqDTO.class));
+		response.setData((List<Object>) listaPersona);
+		return response;
+	}
+
+	/**
+	 * Método que retorna la lista de personas responsables de tablets
+	 * 
+	 * @author Kenth Encalada <mailto:kencalada@telconet.ec>
+	 * @version 1.0
+	 * @since 25/05/2023
+	 * 
+	 * @param request {@linkplain PersonaResponsableReqDTO}
+	 * @return {@linkplain GenericListResponse}
+	 * @throws Exception
+	 */
+	@PostMapping(path = "listaPersonaResponsable", consumes = "application/json")
+	public GenericListResponse<Object> listaPersonaResponsable(@RequestBody PersonaResponsableReqDTO request) throws Exception {
+		log.info("Petición recibida: listaPersonaResponsable");
+		GenericListResponse<Object> response = new GenericListResponse<>();
+		Object listaPersona = personaService.listaPersonaResponsable(Formato.mapearObjDeserializado(request, PersonaResponsableReqDTO.class));
 		response.setData((List<Object>) listaPersona);
 		return response;
 	}

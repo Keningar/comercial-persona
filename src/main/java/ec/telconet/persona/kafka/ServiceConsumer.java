@@ -43,7 +43,6 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.AgregarPers
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.AgregarPersonaListaResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.BusquedaPersonaListaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.BusquedaPersonaListaResDTO;
-import ec.telconet.microservicios.dependencias.esquema.comercial.dto.FormaContactoReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.HistorialServicioPorFechaReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoPersonaEmpFormaPagoDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.InfoClienteNotMasivaDetReqDTO;
@@ -58,6 +57,8 @@ import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorE
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRegionReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaPorRolReqDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaProspectoReqDto;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaResponsableReqDTO;
+import ec.telconet.microservicios.dependencias.esquema.comercial.dto.PersonaResponsableResDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.dto.SeguPerfilPersonaDTO;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.AdmiCaracteristica;
 import ec.telconet.microservicios.dependencias.esquema.comercial.entity.InfoPersona;
@@ -225,7 +226,16 @@ public class ServiceConsumer {
 				commitKafka.acknowledge();
 				log.info("Petición kafka sincrónico enviada: {} Transacción: {}",kafkaRequest::getOp, idTransKafka::toString);
 				return (KafkaResponse<T>) response;
-			}else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_POR_CARACT)) {
+			} else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_RESPONSABLE)) {
+				PersonaKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaKafkaReq.class);
+				// Inicio Proceso logico
+				PersonaResponsableReqDTO requestService = Formato.mapearObjDeserializado(data, PersonaResponsableReqDTO.class);
+				// Fin Proceso logico
+				KafkaResponse<PersonaResponsableResDTO> response = new KafkaResponse<>();
+				response.setData(personaService.listaPersonaResponsable(requestService));
+				commitKafka.acknowledge();
+				log.info("Petición kafka sincrónico enviada: {} Transacción: {}",kafkaRequest::getOp, idTransKafka::toString);
+			} else if (kafkaRequest.getOp().equalsIgnoreCase(CoreComercialConstants.OP_LISTA_PERSONA_POR_CARACT)) {
 				PersonaKafkaReq data = Formato.mapearObjDeserializado(kafkaRequest.getData(), PersonaKafkaReq.class);
 				// Inicio Proceso logico
 				PersonaPorCaractReqDTO requestService = Formato.mapearObjDeserializado(data, PersonaPorCaractReqDTO.class);
